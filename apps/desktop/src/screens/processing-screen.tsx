@@ -3,6 +3,7 @@ import { Progress } from "@/components/ui/progress";
 import { WindowFooter } from "@/components/window-footer";
 import { useApp } from "@/lib/app-store";
 import { formatBytes, formatDimensions } from "@/lib/image";
+import { useSimulatedRemoval } from "@/lib/use-simulated-removal";
 import { STAGES, stageStatus, type StageStatus } from "@/lib/types";
 
 const STAGE_CAPTIONS = [
@@ -47,6 +48,7 @@ function StageRow({ label, status }: { label: string; status: StageStatus }) {
 
 export function ProcessingScreen() {
   const { source, progress, stageIndex, reset } = useApp();
+  useSimulatedRemoval();
   const remaining = Math.max(1, Math.ceil(((100 - progress) / 100) * 4));
   const caption = STAGE_CAPTIONS[Math.min(stageIndex, STAGE_CAPTIONS.length - 1)];
 
