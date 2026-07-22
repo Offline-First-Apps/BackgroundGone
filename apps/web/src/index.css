@@ -100,11 +100,18 @@
   --acc-fuchsia-bg: #fae8ff;
   --acc-fuchsia-fg: #a21caf;
 
-  --font-sans-stack: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
-  --font-mono-stack: var(--font-geist-mono), ui-monospace, monospace;
-  --font-serif-stack: var(--font-instrument-serif), Georgia, serif;
-
   --radius: 0.75rem;
+}
+
+/*
+ * Fonts must live in a non-inline @theme so Tailwind emits the --font-*
+ * custom properties (overriding its defaults). They point straight at the
+ * next/font variables set on <body>.
+ */
+@theme {
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-serif: var(--font-instrument-serif), Georgia, serif;
 }
 
 .dark {
@@ -203,10 +210,6 @@
   --color-body: var(--body);
   --color-faint: var(--faint);
   --color-logos: var(--logos);
-
-  --font-sans: var(--font-sans-stack);
-  --font-mono: var(--font-mono-stack);
-  --font-serif: var(--font-serif-stack);
 
   --animate-bg-float1: bg-float1 7s ease-in-out infinite;
   --animate-bg-float2: bg-float2 7.5s ease-in-out infinite;
