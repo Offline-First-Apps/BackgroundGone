@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import Script from "next/script";
 
 import "../index.css";
 import Providers from "@/components/providers";
+
+const GA_ID = "G-KEN2RFZKV6";
 
 const geistSans = Geist({
   variable: "--font-geist",
@@ -48,6 +51,20 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} antialiased`}
       >
         <Providers>{children}</Providers>
+
+        {/* Google tag (gtag.js) — loaded once for every page via the root layout. */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_ID}');
+          `}
+        </Script>
       </body>
     </html>
   );
