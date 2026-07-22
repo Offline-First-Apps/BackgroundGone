@@ -35,6 +35,7 @@
   --fg-1: #52525b;
   --fg-2: #71717a;
   --fg-3: #a1a1aa;
+  --label: #71717a;
   --icon: #71717a;
   --icon-hover-bg: #f4f4f5;
 
@@ -93,6 +94,7 @@
   --fg-1: #a5a5ab;
   --fg-2: #7c7c82;
   --fg-3: #5f5f65;
+  --label: #a5a5ab;
   --icon: #8a8a8f;
   --icon-hover-bg: #1f1f1f;
 
@@ -147,6 +149,7 @@
   --color-fg-1: var(--fg-1);
   --color-fg-2: var(--fg-2);
   --color-fg-3: var(--fg-3);
+  --color-label: var(--label);
   --color-icon: var(--icon);
 
   --color-track: var(--track);

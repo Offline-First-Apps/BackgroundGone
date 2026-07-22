@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { AppWindow } from "@/components/app-window";
+import { EmptyScreen } from "@/screens/empty-screen";
 import { AppStoreProvider, useApp } from "@/lib/app-store";
 
 export const Route = createFileRoute("/")({
@@ -10,8 +11,15 @@ export const Route = createFileRoute("/")({
 function Screens() {
   const { screen } = useApp();
 
-  // Screen components are added in the following steps; placeholders keep the
-  // state machine runnable in the meantime.
+  if (screen === "empty") {
+    return (
+      <AppWindow>
+        <EmptyScreen />
+      </AppWindow>
+    );
+  }
+
+  // Processing and result screens are added in the following steps.
   return (
     <AppWindow>
       <div className="flex flex-1 items-center justify-center text-fg-3">
