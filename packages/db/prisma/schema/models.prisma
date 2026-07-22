@@ -1,0 +1,33 @@
+/// People who asked to be notified when the Mac build ships.
+model WaitlistSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  platform  String   @default("mac")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// A purchase, created when a checkout session starts and updated by
+/// Dodo Payments webhooks as the payment progresses.
+model Order {
+  id         String   @id @default(cuid())
+  /// Dodo checkout session id.
+  checkoutId String?  @unique
+  /// Dodo payment id (set once payment is created/confirmed).
+  paymentId  String?  @unique
+  email      String
+  name       String?
+  productId  String
+  /// Amount in the smallest currency unit (e.g. cents).
+  amount     Int?
+  currency   String?
+  /// pending | succeeded | failed | cancelled
+  status     String   @default("pending")
+  licenseKey String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([email])
+  @@index([status])
+}
