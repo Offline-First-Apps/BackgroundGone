@@ -72,7 +72,7 @@ export function Pricing() {
         <div className="font-mono text-[12px] font-medium uppercase tracking-[0.14em] text-brand">
           Pricing
         </div>
-        <h2 className="mt-[14px] font-serif text-[44px] font-normal leading-[1.04] tracking-[-0.01em] text-fg">
+        <h2 className="mt-[14px] font-serif text-[32px] font-normal leading-[1.06] tracking-[-0.01em] text-fg sm:text-[44px] sm:leading-[1.04]">
           Buy it once. <span className="italic text-[var(--serif-em)]">Done.</span>
         </h2>
       </div>

@@ -19,7 +19,7 @@ export function Hero() {
         </span>
       </div>
 
-      <h1 className="relative z-[2] m-0 font-serif text-[84px] font-normal leading-[0.98] tracking-[-0.01em] text-fg">
+      <h1 className="relative z-[2] m-0 font-serif text-[40px] font-normal leading-[1.02] tracking-[-0.01em] text-fg sm:text-[60px] sm:leading-[1] md:text-[84px] md:leading-[0.98]">
         Remove the background.
         <br />
         <span className="italic text-[var(--serif-em)]">Keep everything</span>{" "}

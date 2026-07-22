@@ -36,7 +36,7 @@ export function Features() {
         <div className="font-mono text-[12px] font-medium uppercase tracking-[0.14em] text-brand">
           Everything you need
         </div>
-        <h2 className="mt-[14px] font-serif text-[44px] font-normal leading-[1.04] tracking-[-0.01em] text-fg">
+        <h2 className="mt-[14px] font-serif text-[32px] font-normal leading-[1.06] tracking-[-0.01em] text-fg sm:text-[44px] sm:leading-[1.04]">
           Precise cutouts, <span className="italic text-[var(--serif-em)]">without the fuss.</span>
         </h2>
       </div>
