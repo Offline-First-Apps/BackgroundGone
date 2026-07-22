@@ -1,0 +1,3 @@
+{
+  "extends": "@backgroundgone/config/tsconfig.base.json"
+}
