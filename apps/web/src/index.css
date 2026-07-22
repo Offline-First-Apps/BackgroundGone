@@ -29,7 +29,9 @@
   --fg-2: #52525b;
   --body: #71717a;
   --faint: #a1a1aa;
+  --faint-2: #a1a1aa;
   --logos: #c4c4c8;
+  --serif-em: #18181b;
 
   --pill: #f4f4f5;
   --pill-border: #ececee;
@@ -84,7 +86,9 @@
   --fg-2: #a5a5ab;
   --body: #a5a5ab;
   --faint: #7c7c82;
+  --faint-2: #5f5f65;
   --logos: #3f3f46;
+  --serif-em: #ff8b8b;
 
   --pill: #161616;
   --pill-border: #262626;
