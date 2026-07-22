@@ -1,1 +1,200 @@
-@import "@backgroundgone/ui/globals.css";
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* next-themes toggles the `dark` class on <html> */
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Design tokens — extracted 1:1 from the BackgroundGone mockups.
+ * Light values live in :root, dark values in .dark. Anything identical
+ * across themes (brand, traffic lights) is declared once in :root.
+ */
+:root {
+  /* Brand + status (constant across themes unless noted) */
+  --brand: #ff6b6b;
+  --brand-hover: #f65454;
+  --brand-tint: rgba(255, 107, 107, 0.12);
+  --brand-glow: rgba(255, 107, 107, 0.6);
+
+  /* macOS traffic lights (constant) */
+  --tl-red: #ff5f57;
+  --tl-yellow: #febc2e;
+  --tl-green: #28c840;
+
+  /* ---- LIGHT THEME ---- */
+  --win: #ffffff;
+  --win-border: #e4e4e7;
+  --win-shadow: 0 28px 70px -30px rgba(0, 0, 0, 0.2);
+  --edge-header: #efeff1;
+  --edge-footer: #efeff1;
+
+  --pane: #fafafa;
+  --pane-border: #efeff1;
+
+  --fg: #18181b;
+  --fg-1: #52525b;
+  --fg-2: #71717a;
+  --fg-3: #a1a1aa;
+  --icon: #71717a;
+  --icon-hover-bg: #f4f4f5;
+
+  --green: #16a34a;
+
+  --dz-border: #d4d4d8;
+  --dz-bg: #fafafa;
+  --dz-bg-hover: #fffafa;
+
+  --kbd-bg: #f4f4f5;
+  --kbd-border: #e4e4e7;
+  --kbd-fg: #52525b;
+
+  --chip-bg: #f4f4f5;
+  --chip-border: #e4e4e7;
+  --chip-fg: #71717a;
+
+  --ctrl-bg: #ffffff;
+  --ctrl-border: #e4e4e7;
+  --ctrl-fg: #18181b;
+  --ctrl-fg-muted: #52525b;
+  --ctrl-bg-hover: #f4f4f5;
+  --ctrl-border-hover: #d4d4d8;
+
+  --track: #ececee;
+  --spin-track: #e4e4e7;
+  --idle-border: #d4d4d8;
+
+  /* transparency checkerboard (result pane) */
+  --check-base: #f5f5f5;
+  --check-square: #e2e2e4;
+  /* diagonal placeholder stripes */
+  --stripe-a: #f1f1f3;
+  --stripe-b: #e7e7ea;
+
+  --overlay: rgba(255, 255, 255, 0.85);
+  --overlay-border: #e4e4e7;
+
+  --radius: 0.5rem;
+
+  --font-sans: "Geist Variable", "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, monospace;
+}
+
+.dark {
+  --win: #121212;
+  --win-border: #262626;
+  --win-shadow: 0 28px 70px -24px rgba(0, 0, 0, 0.55);
+  --edge-header: #232323;
+  --edge-footer: #1f1f1f;
+
+  --pane: #0e0e0e;
+  --pane-border: #1f1f1f;
+
+  --fg: #e4e4e7;
+  --fg-1: #a5a5ab;
+  --fg-2: #7c7c82;
+  --fg-3: #5f5f65;
+  --icon: #8a8a8f;
+  --icon-hover-bg: #1f1f1f;
+
+  --green: #28c840;
+
+  --dz-border: #3a3a3a;
+  --dz-bg: #161616;
+  --dz-bg-hover: #191616;
+
+  --kbd-bg: #232323;
+  --kbd-border: #333333;
+  --kbd-fg: #c4c4c8;
+
+  --chip-bg: #1c1c1c;
+  --chip-border: #2b2b2b;
+  --chip-fg: #8a8a8f;
+
+  --ctrl-bg: #1f1f1f;
+  --ctrl-border: #333333;
+  --ctrl-fg: #e4e4e7;
+  --ctrl-fg-muted: #c4c4c8;
+  --ctrl-bg-hover: #2a2a2a;
+  --ctrl-border-hover: #444444;
+
+  --track: #242424;
+  --spin-track: #333333;
+  --idle-border: #3a3a3a;
+
+  --check-base: #1a1a1a;
+  --check-square: #262626;
+  --stripe-a: #1c1c1c;
+  --stripe-b: #232323;
+
+  --overlay: rgba(18, 18, 18, 0.82);
+  --overlay-border: #333333;
+}
+
+/* Expose tokens as Tailwind utilities (theme-aware via the vars above). */
+@theme inline {
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-green: var(--green);
+
+  --color-win: var(--win);
+  --color-win-border: var(--win-border);
+  --color-edge-header: var(--edge-header);
+  --color-edge-footer: var(--edge-footer);
+  --color-pane: var(--pane);
+  --color-pane-border: var(--pane-border);
+
+  --color-fg: var(--fg);
+  --color-fg-1: var(--fg-1);
+  --color-fg-2: var(--fg-2);
+  --color-fg-3: var(--fg-3);
+  --color-icon: var(--icon);
+
+  --color-track: var(--track);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  --animate-bg-ring: bg-ring 2.4s ease-out infinite;
+  --animate-bg-pulse: bg-pulse 3s ease-in-out infinite;
+  --animate-bg-spin: bg-spin 0.8s linear infinite;
+
+  @keyframes bg-ring {
+    0% {
+      transform: scale(0.8);
+      opacity: 0.5;
+    }
+    100% {
+      transform: scale(1.5);
+      opacity: 0;
+    }
+  }
+  @keyframes bg-pulse {
+    0%,
+    100% {
+      opacity: 0.65;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.06);
+    }
+  }
+  @keyframes bg-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
