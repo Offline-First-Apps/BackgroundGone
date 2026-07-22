@@ -8,7 +8,7 @@ const LINKS = [
 
 export function Nav() {
   return (
-    <nav className="relative z-10 flex items-center justify-between px-[34px] py-[22px]">
+    <nav className="relative z-10 flex items-center justify-between gap-3 px-5 py-4 sm:px-[34px] sm:py-[22px]">
       <a href="#top" className="flex items-center gap-[11px]">
         <span className="flex size-[34px] items-center justify-center rounded-[10px] bg-[var(--logo-sq)]">
           <span className="size-[18px] rounded-[6px] bg-[var(--logo-sq-inner)]" />

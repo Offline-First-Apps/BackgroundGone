@@ -25,16 +25,16 @@ export function YouOwnIt() {
   return (
     <section
       id="own"
-      className="relative mx-[10px] mb-[10px] overflow-hidden rounded-[22px] border border-[var(--own-border)] bg-[var(--own-bg)] px-12 py-[60px] text-white"
+      className="relative mx-[10px] mb-[10px] overflow-hidden rounded-[22px] border border-[var(--own-border)] bg-[var(--own-bg)] px-6 py-12 text-white sm:px-12 sm:py-[60px]"
     >
       <div className="pointer-events-none absolute -right-20 -top-20 size-[340px] rounded-full bg-[radial-gradient(circle,rgba(255,107,107,0.16),transparent_70%)]" />
 
-      <div className="relative z-[2] flex flex-wrap items-center gap-[52px]">
-        <div className="min-w-[340px] flex-1">
+      <div className="relative z-[2] flex flex-wrap items-center gap-8 sm:gap-[52px]">
+        <div className="min-w-0 flex-1">
           <div className="font-mono text-[12px] font-medium uppercase tracking-[0.14em] text-brand">
             The whole point
           </div>
-          <h2 className="mt-4 font-serif text-[50px] font-normal leading-[1.02] tracking-[-0.01em]">
+          <h2 className="mt-4 font-serif text-[38px] font-normal leading-[1.04] tracking-[-0.01em] sm:text-[50px] sm:leading-[1.02]">
             You bought it.
             <br />
             <span className="italic text-brand-soft">You own it.</span>
@@ -58,7 +58,7 @@ export function YouOwnIt() {
           </div>
         </div>
 
-        <div className="flex-[0_0_360px]">
+        <div className="w-full sm:flex-[0_0_360px]">
           <div className="rounded-[18px] border border-[var(--own-card-border)] bg-[var(--own-card-bg)] p-[26px] shadow-[0_30px_60px_-30px_rgba(0,0,0,0.7)]">
             <div className="flex items-center justify-between border-b border-dashed border-[#333] pb-[18px]">
               <div className="flex items-center gap-2.5">
