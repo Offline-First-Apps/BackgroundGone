@@ -22,6 +22,8 @@ impl BgRemover {
             .map(|n| n.get())
             .unwrap_or(4);
 
+        // `mut` is only used when a GPU execution-provider feature is enabled.
+        #[allow(unused_mut)]
         let mut builder = Session::builder()
             .map_err(|e| e.to_string())?
             .with_optimization_level(GraphOptimizationLevel::Level3)
@@ -68,8 +70,10 @@ impl BgRemover {
         ))
         .map_err(|e| e.to_string())?;
 
-        let inputs = ort::inputs!["pixel_values" => input].map_err(|e| e.to_string())?;
-        let outputs = self.session.run(inputs).map_err(|e| e.to_string())?;
+        let outputs = self
+            .session
+            .run(ort::inputs!["pixel_values" => input])
+            .map_err(|e| e.to_string())?;
 
         let (_shape, mask) = outputs["alphas"]
             .try_extract_tensor::<f32>()
