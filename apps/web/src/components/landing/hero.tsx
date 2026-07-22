@@ -39,7 +39,7 @@ export function Hero() {
           className="shadow-[0_12px_26px_-10px_rgba(255,107,107,0.6)]"
         />
         <Button variant="secondary" size="xl" asChild>
-          <a href="/how-it-works">See how it works</a>
+          <a href="#features">See how it works</a>
         </Button>
       </div>
 

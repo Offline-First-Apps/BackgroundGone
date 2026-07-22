@@ -4,7 +4,6 @@ const LINKS = [
   { href: "/#features", label: "Features" },
   { href: "/#own", label: "You own it" },
   { href: "/#pricing", label: "Pricing" },
-  { href: "/how-it-works", label: "How it works" },
 ];
 
 export function Nav() {
