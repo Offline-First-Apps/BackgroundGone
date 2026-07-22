@@ -11,6 +11,7 @@
     "build": "turbo run build",
     "check-types": "turbo run check-types",
     "dev:web": "turbo run dev -F web",
+    "dev:desktop": "turbo run dev -F desktop",
     "dev:server": "turbo run dev -F server",
     "db:push": "turbo run db:push -F @backgroundgone/db",
     "db:studio": "turbo run db:studio -F @backgroundgone/db",
