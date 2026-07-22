@@ -54,3 +54,7 @@ coverage
 .cache
 tmp
 temp
+
+# Local planning docs (working notes, not tracked)
+/plans/
+apps/desktop/MODEL_INTEGRATION.md
