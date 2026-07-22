@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { WindowsIcon } from "./icons";
+import { BuyButton } from "./buy-button";
 import { HeroComposition } from "./hero-composition";
 import { MacWaitlistLink } from "./mac-waitlist";
 
@@ -33,16 +33,13 @@ export function Hero() {
       </p>
 
       <div className="relative z-[2] mt-8 flex flex-wrap items-center justify-center gap-3">
-        <Button
+        <BuyButton
           variant="brand"
           size="xl"
           className="shadow-[0_12px_26px_-10px_rgba(255,107,107,0.6)]"
-        >
-          <WindowsIcon size={16} />
-          Download for Windows
-        </Button>
-        <Button variant="secondary" size="xl">
-          See how it works
+        />
+        <Button variant="secondary" size="xl" asChild>
+          <a href="/how-it-works">See how it works</a>
         </Button>
       </div>
 

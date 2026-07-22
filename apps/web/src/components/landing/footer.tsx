@@ -1,5 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { WindowsIcon } from "./icons";
+import { BuyButton } from "./buy-button";
 import { MacWaitlistLink } from "./mac-waitlist";
 
 const COLUMNS = [
@@ -40,10 +39,7 @@ export function Footer() {
             <br />
             <span className="italic text-brand-soft">Keep everything else.</span>
           </h3>
-          <Button variant="brand" size="md" className="mt-[22px]">
-            <WindowsIcon size={15} />
-            Download for Windows
-          </Button>
+          <BuyButton variant="brand" size="md" className="mt-[22px]" />
         </div>
 
         <div className="flex flex-wrap gap-[60px]">

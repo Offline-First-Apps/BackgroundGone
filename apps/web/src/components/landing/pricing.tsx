@@ -2,8 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import { WindowsIcon } from "./icons";
+import { BuyButton } from "./buy-button";
 import { MacWaitlistLink } from "./mac-waitlist";
 
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
@@ -157,10 +156,7 @@ export function Pricing() {
               </div>
             ))}
           </div>
-          <Button variant="brand" size="lg" className="mt-6 w-full">
-            <WindowsIcon size={15} />
-            Download for Windows
-          </Button>
+          <BuyButton variant="brand" size="lg" className="mt-6 w-full" />
           <div className="mt-3 text-center">
             <MacWaitlistLink className="cursor-pointer border-b border-[#3a3a3a] pb-px text-[13px] text-[#a5a5ab] transition-colors hover:text-brand">
               Looking for Mac? →

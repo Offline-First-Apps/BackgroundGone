@@ -1,5 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { WindowsIcon } from "./icons";
+import { BuyButton } from "./buy-button";
 
 const LINKS = [
   { href: "#features", label: "Features" },
@@ -38,10 +37,7 @@ export function Nav() {
             100% on-device
           </span>
         </div>
-        <Button variant="nav" size="nav">
-          <WindowsIcon size={14} />
-          Get for Windows
-        </Button>
+        <BuyButton variant="nav" size="nav" />
       </div>
     </nav>
   );
