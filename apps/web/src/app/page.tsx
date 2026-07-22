@@ -1,4 +1,5 @@
 import { Features } from "@/components/landing/features";
+import { Footer } from "@/components/landing/footer";
 import { Hero } from "@/components/landing/hero";
 import { LogoStrip } from "@/components/landing/logo-strip";
 import { Nav } from "@/components/landing/nav";
@@ -16,7 +17,7 @@ export default function Home() {
       <Features />
       <Stats />
       <Pricing />
-      {/* Footer is added next. */}
+      <Footer />
     </div>
   );
 }
