@@ -1,4 +1,3 @@
-import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import { WindowsIcon } from "./icons";
 
@@ -39,7 +38,6 @@ export function Nav() {
             100% on-device
           </span>
         </div>
-        <ModeToggle />
         <Button variant="nav" size="nav">
           <WindowsIcon size={14} />
           Get for Windows
