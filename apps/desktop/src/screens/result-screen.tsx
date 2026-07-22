@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { WindowFooter } from "@/components/window-footer";
 import { useApp } from "@/lib/app-store";
+import { copyResultToClipboard, downloadResult } from "@/lib/export-image";
 import { formatBytes, formatDimensions } from "@/lib/image";
 
 const LOUPE = 92;
@@ -36,6 +37,14 @@ function DownloadIcon() {
   );
 }
 
+function PillCheckIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20 6L9 17l-5-5" />
+    </svg>
+  );
+}
+
 export function ResultScreen() {
   const { source, result } = useApp();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -45,6 +54,27 @@ export function ResultScreen() {
   const [divider, setDivider] = useState(50);
   const [dragging, setDragging] = useState(false);
   const [loupe, setLoupe] = useState<LoupeState | null>(null);
+  const [copied, setCopied] = useState(false);
+  const copiedTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  async function handleCopy() {
+    if (!result) return;
+    try {
+      await copyResultToClipboard(result.url);
+      setCopied(true);
+      clearTimeout(copiedTimer.current);
+      copiedTimer.current = setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* clipboard blocked — no-op for now */
+    }
+  }
+
+  function handleExport(format: "png" | "jpg") {
+    if (!result) return;
+    void downloadResult(result.url, source?.name ?? "image", format);
+  }
+
+  useEffect(() => () => clearTimeout(copiedTimer.current), []);
 
   // Divider drag
   useEffect(() => {
@@ -187,6 +217,14 @@ export function ResultScreen() {
             </svg>
           </button>
         </div>
+
+        {/* Copied toast */}
+        {copied && (
+          <div className="absolute bottom-5 left-1/2 z-40 flex -translate-x-1/2 items-center gap-2 rounded-[10px] bg-fg px-[15px] py-[9px] text-[13px] font-semibold text-win shadow-[0_10px_28px_rgba(0,0,0,0.45)]">
+            <PillCheckIcon />
+            Copied to clipboard
+          </div>
+        )}
       </div>
 
       <WindowFooter className="h-[74px]">
@@ -194,13 +232,26 @@ export function ResultScreen() {
           Drag divider to compare · hover to zoom
         </span>
         <div className="flex items-center gap-2.5">
-          <Button variant="control" size="icon" aria-label="Copy to clipboard">
+          <Button
+            variant="control"
+            size="icon"
+            aria-label="Copy to clipboard"
+            onClick={handleCopy}
+          >
             <CopyIcon />
           </Button>
-          <Button variant="control" size="default">
+          <Button
+            variant="control"
+            size="default"
+            onClick={() => handleExport("jpg")}
+          >
             Export JPG
           </Button>
-          <Button variant="brand" size="wide">
+          <Button
+            variant="brand"
+            size="wide"
+            onClick={() => handleExport("png")}
+          >
             <DownloadIcon />
             Export PNG
           </Button>
