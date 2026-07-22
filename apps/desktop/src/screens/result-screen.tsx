@@ -1,8 +1,21 @@
+import { useEffect, useRef, useState } from "react";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { WindowFooter } from "@/components/window-footer";
 import { useApp } from "@/lib/app-store";
 import { formatBytes, formatDimensions } from "@/lib/image";
+
+const LOUPE = 92;
+const ZOOM = 1.5;
+
+interface LoupeState {
+  cx: number;
+  cy: number;
+  bgX: number;
+  bgY: number;
+  bgW: number;
+}
 
 function CopyIcon() {
   return (
@@ -25,11 +38,59 @@ function DownloadIcon() {
 
 export function ResultScreen() {
   const { source, result } = useApp();
-  const divider = 50;
+  const rootRef = useRef<HTMLDivElement>(null);
+  const resultPaneRef = useRef<HTMLDivElement>(null);
+  const resultImgRef = useRef<HTMLImageElement>(null);
+
+  const [divider, setDivider] = useState(50);
+  const [dragging, setDragging] = useState(false);
+  const [loupe, setLoupe] = useState<LoupeState | null>(null);
+
+  // Divider drag
+  useEffect(() => {
+    if (!dragging) return;
+    function move(e: PointerEvent) {
+      const r = rootRef.current?.getBoundingClientRect();
+      if (!r) return;
+      const pct = ((e.clientX - r.left) / r.width) * 100;
+      setDivider(Math.min(88, Math.max(12, pct)));
+    }
+    function up() {
+      setDragging(false);
+    }
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+    return () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+    };
+  }, [dragging]);
+
+  function updateLoupe(e: React.PointerEvent) {
+    if (dragging) return setLoupe(null);
+    const img = resultImgRef.current;
+    const pane = resultPaneRef.current;
+    if (!img || !pane) return;
+    const r = img.getBoundingClientRect();
+    const pr = pane.getBoundingClientRect();
+    const ix = e.clientX - r.left;
+    const iy = e.clientY - r.top;
+    if (ix < 0 || iy < 0 || ix > r.width || iy > r.height) {
+      setLoupe(null);
+      return;
+    }
+    setLoupe({
+      cx: e.clientX - pr.left,
+      cy: e.clientY - pr.top,
+      bgW: r.width * ZOOM,
+      bgX: LOUPE / 2 - ix * ZOOM,
+      bgY: LOUPE / 2 - iy * ZOOM,
+    });
+  }
 
   return (
     <>
-      <div className="relative flex min-h-0 flex-1">
+      <div ref={rootRef} className="relative flex min-h-0 flex-1">
         {/* Original */}
         <div
           className="relative flex items-center justify-center overflow-hidden bg-pane p-8"
@@ -55,6 +116,9 @@ export function ResultScreen() {
 
         {/* Result (on transparency) */}
         <div
+          ref={resultPaneRef}
+          onPointerMove={updateLoupe}
+          onPointerLeave={() => setLoupe(null)}
           className="checkerboard relative flex items-center justify-center overflow-hidden p-8"
           style={{ width: `${100 - divider}%` }}
         >
@@ -68,26 +132,39 @@ export function ResultScreen() {
             )}
           </div>
 
-          {/* Zoom loupe */}
-          <div className="checkerboard pointer-events-none absolute right-9 top-16 size-[92px] overflow-hidden rounded-full border-2 border-white shadow-[0_8px_24px_rgba(0,0,0,0.3)]">
-            {result && (
-              <img
-                src={result.url}
-                alt=""
-                className="absolute left-1/2 top-1/2 h-auto w-[150%] max-w-none -translate-x-1/2 -translate-y-1/2"
-              />
-            )}
-            <span className="absolute bottom-[5px] right-[5px] rounded-[5px] bg-black/50 px-[5px] py-px font-mono text-[9px] text-white">
-              150%
-            </span>
-          </div>
-
           {result && (
             <img
+              ref={resultImgRef}
               src={result.url}
               alt="Result"
               className="max-h-full w-full max-w-[340px] rounded-[10px] object-contain shadow-[0_10px_40px_-8px_rgba(0,0,0,0.4)]"
             />
+          )}
+
+          {/* Hover zoom loupe */}
+          {loupe && result && (
+            <div
+              className="checkerboard pointer-events-none absolute z-30 overflow-hidden rounded-full border-2 border-white shadow-[0_8px_24px_rgba(0,0,0,0.3)]"
+              style={{
+                width: LOUPE,
+                height: LOUPE,
+                left: loupe.cx - LOUPE / 2,
+                top: loupe.cy - LOUPE / 2,
+              }}
+            >
+              <img
+                src={result.url}
+                alt=""
+                className="absolute left-0 top-0 max-w-none"
+                style={{
+                  width: loupe.bgW,
+                  transform: `translate(${loupe.bgX}px, ${loupe.bgY}px)`,
+                }}
+              />
+              <span className="absolute bottom-[5px] right-[5px] rounded-[5px] bg-black/50 px-[5px] py-px font-mono text-[9px] text-white">
+                150%
+              </span>
+            </div>
           )}
         </div>
 
@@ -96,12 +173,19 @@ export function ResultScreen() {
           className="absolute inset-y-0 z-20 w-0.5 -translate-x-1/2 bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.18)]"
           style={{ left: `${divider}%` }}
         >
-          <div className="absolute left-1/2 top-1/2 flex size-[38px] -translate-x-1/2 -translate-y-1/2 cursor-ew-resize items-center justify-center gap-px rounded-full bg-white text-[#18181b] shadow-[0_4px_16px_rgba(0,0,0,0.3)]">
+          <button
+            onPointerDown={(e) => {
+              e.preventDefault();
+              setDragging(true);
+            }}
+            aria-label="Drag to compare"
+            className="absolute left-1/2 top-1/2 flex size-[38px] -translate-x-1/2 -translate-y-1/2 cursor-ew-resize items-center justify-center gap-px rounded-full bg-white text-[#18181b] shadow-[0_4px_16px_rgba(0,0,0,0.3)]"
+          >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M11 8l-3 4 3 4" />
               <path d="M13 8l3 4-3 4" />
             </svg>
-          </div>
+          </button>
         </div>
       </div>
 
