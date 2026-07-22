@@ -2,6 +2,7 @@ import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
+import { ThemeProvider } from "./components/theme-provider";
 import { routeTree } from "./routeTree.gen";
 import "@fontsource-variable/geist";
 import "@fontsource-variable/geist-mono";
@@ -23,7 +24,9 @@ const rootElement = document.getElementById("root");
 if (rootElement && !rootElement.innerHTML) {
   createRoot(rootElement).render(
     <StrictMode>
-      <RouterProvider router={router} />
+      <ThemeProvider>
+        <RouterProvider router={router} />
+      </ThemeProvider>
     </StrictMode>,
   );
 }
