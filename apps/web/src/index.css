@@ -1,1 +1,218 @@
-@import "@backgroundgone/ui/globals.css";
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * BackgroundGone landing — tokens extracted 1:1 from the mockup (1a light /
+ * 1b dark). Light values in :root, dark in .dark. Brand + traffic lights are
+ * constant. Several elements intentionally swap treatment between themes
+ * (logo mark, primary nav button), so those get their own tokens.
+ */
+:root {
+  --brand: #ff6b6b;
+  --brand-hover: #f65454;
+  --brand-soft: #ff8b8b;
+  --ok: #16a34a;
+  --tl-red: #ff5f57;
+  --tl-yellow: #febc2e;
+  --tl-green: #28c840;
+
+  /* ---- LIGHT ---- */
+  --page: #ffffff;
+  --card: #fafafa;
+  --card-border: #f1f1f3;
+  --border: #e4e4e7;
+  --hairline: #ececee;
+
+  --fg: #18181b;
+  --fg-2: #52525b;
+  --body: #71717a;
+  --faint: #a1a1aa;
+  --logos: #c4c4c8;
+
+  --pill: #f4f4f5;
+  --pill-border: #ececee;
+  --navlink: #52525b;
+  --navlink-hover-bg: #ffffff;
+  --navlink-hover-fg: #18181b;
+
+  --logo-sq: #18181b;
+  --logo-sq-inner: #ff6b6b;
+  --getbtn-bg: #18181b;
+  --getbtn-hover: #000000;
+
+  --secbtn-bg: #ffffff;
+  --secbtn-border: #e4e4e7;
+  --secbtn-fg: #18181b;
+  --secbtn-hover-bg: #fafafa;
+  --secbtn-hover-border: #d4d4d8;
+
+  --badge-bg: #fff5f2;
+  --badge-border: #ffdcd2;
+  --badge-fg: #b4442f;
+  --hero-glow: radial-gradient(
+    circle at 50% 40%,
+    #fff4f0 0%,
+    #fff9f7 45%,
+    rgba(255, 255, 255, 0) 70%
+  );
+
+  /* dark panels (dark in both themes; slight per-theme differences) */
+  --own-bg: #0e0e0e;
+  --own-border: transparent;
+  --footer-bg: #0e0e0e;
+  --price-card: #18181b;
+  --price-card-border: transparent;
+
+  --font-sans-stack: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-mono-stack: var(--font-geist-mono), ui-monospace, monospace;
+  --font-serif-stack: var(--font-instrument-serif), Georgia, serif;
+
+  --radius: 0.75rem;
+}
+
+.dark {
+  --page: #0b0b0b;
+  --card: #161616;
+  --card-border: #232323;
+  --border: #2a2a2a;
+  --hairline: #1f1f1f;
+
+  --fg: #fafafa;
+  --fg-2: #a5a5ab;
+  --body: #a5a5ab;
+  --faint: #7c7c82;
+  --logos: #3f3f46;
+
+  --pill: #161616;
+  --pill-border: #262626;
+  --navlink: #a5a5ab;
+  --navlink-hover-bg: #232323;
+  --navlink-hover-fg: #ffffff;
+
+  --logo-sq: #ff6b6b;
+  --logo-sq-inner: #0b0b0b;
+  --getbtn-bg: #ff6b6b;
+  --getbtn-hover: #f65454;
+
+  --secbtn-bg: #161616;
+  --secbtn-border: #2a2a2a;
+  --secbtn-fg: #f4f4f5;
+  --secbtn-hover-bg: #1f1f1f;
+  --secbtn-hover-border: #3a3a3a;
+
+  --badge-bg: rgba(255, 107, 107, 0.1);
+  --badge-border: rgba(255, 107, 107, 0.25);
+  --badge-fg: #ff8b8b;
+  --hero-glow: radial-gradient(
+    circle at 50% 40%,
+    rgba(255, 107, 107, 0.14) 0%,
+    rgba(255, 107, 107, 0.04) 45%,
+    rgba(0, 0, 0, 0) 70%
+  );
+
+  --own-bg: #161616;
+  --own-border: #232323;
+  --footer-bg: #000000;
+  --price-card: #161616;
+  --price-card-border: #232323;
+}
+
+@theme inline {
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-soft: var(--brand-soft);
+  --color-ok: var(--ok);
+
+  --color-page: var(--page);
+  --color-card: var(--card);
+  --color-card-border: var(--card-border);
+  --color-border: var(--border);
+  --color-hairline: var(--hairline);
+
+  --color-fg: var(--fg);
+  --color-fg-2: var(--fg-2);
+  --color-body: var(--body);
+  --color-faint: var(--faint);
+  --color-logos: var(--logos);
+
+  --font-sans: var(--font-sans-stack);
+  --font-mono: var(--font-mono-stack);
+  --font-serif: var(--font-serif-stack);
+
+  --animate-bg-float1: bg-float1 7s ease-in-out infinite;
+  --animate-bg-float2: bg-float2 7.5s ease-in-out infinite;
+  --animate-bg-float3: bg-float3 8s ease-in-out infinite;
+  --animate-bg-float4: bg-float4 8.5s ease-in-out infinite;
+
+  @keyframes bg-float1 {
+    0%,
+    100% {
+      transform: translateY(0) rotate(-4deg);
+    }
+    50% {
+      transform: translateY(-12px) rotate(-4deg);
+    }
+  }
+  @keyframes bg-float2 {
+    0%,
+    100% {
+      transform: translateY(0) rotate(3deg);
+    }
+    50% {
+      transform: translateY(-14px) rotate(3deg);
+    }
+  }
+  @keyframes bg-float3 {
+    0%,
+    100% {
+      transform: translateY(0) rotate(-2deg);
+    }
+    50% {
+      transform: translateY(-9px) rotate(-2deg);
+    }
+  }
+  @keyframes bg-float4 {
+    0%,
+    100% {
+      transform: translateY(0) rotate(4deg);
+    }
+    50% {
+      transform: translateY(-16px) rotate(4deg);
+    }
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Transparency checkerboard used in the compare visuals. */
+.checkerboard {
+  background-color: #1a1a1a;
+  background-image: linear-gradient(45deg, #262626 25%, transparent 25%),
+    linear-gradient(-45deg, #262626 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #262626 75%),
+    linear-gradient(-45deg, transparent 75%, #262626 75%);
+  background-size: 22px 22px;
+  background-position: 0 0, 0 11px, 11px -11px, -11px 0;
+}
+.stripes {
+  background: repeating-linear-gradient(
+    45deg,
+    #1c1c1c,
+    #1c1c1c 11px,
+    #232323 11px,
+    #232323 22px
+  );
+}

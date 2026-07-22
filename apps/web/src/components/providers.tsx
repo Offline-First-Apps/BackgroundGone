@@ -1,14 +1,17 @@
 "use client";
 
-import { Toaster } from "@backgroundgone/ui/components/sonner";
-
 import { ThemeProvider } from "./theme-provider";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+      storageKey="backgroundgone-theme"
+    >
       {children}
-      <Toaster richColors />
     </ThemeProvider>
   );
 }
