@@ -1,4 +1,5 @@
 import { Hero } from "@/components/landing/hero";
+import { LogoStrip } from "@/components/landing/logo-strip";
 import { Nav } from "@/components/landing/nav";
 
 export default function Home() {
@@ -6,6 +7,7 @@ export default function Home() {
     <div id="top" className="mx-auto w-full max-w-[1180px]">
       <Nav />
       <Hero />
+      <LogoStrip />
       {/* Remaining sections are added in the next steps. */}
     </div>
   );
