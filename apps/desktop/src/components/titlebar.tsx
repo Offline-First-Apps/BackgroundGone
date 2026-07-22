@@ -15,7 +15,10 @@ function BrandMark() {
 /** 48px window titlebar. `left` overrides the brand mark (e.g. "Start over"). */
 export function Titlebar({ left }: { left?: ReactNode }) {
   return (
-    <header className="flex h-12 shrink-0 items-center justify-between border-b border-edge-header px-4">
+    <header
+      data-tauri-drag-region
+      className="flex h-12 shrink-0 items-center justify-between border-b border-edge-header px-4"
+    >
       <div className="flex items-center">
         <TrafficLights />
         <div className="ml-4">{left ?? <BrandMark />}</div>
