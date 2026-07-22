@@ -21,12 +21,39 @@ impl BgRemover {
         let threads = std::thread::available_parallelism()
             .map(|n| n.get())
             .unwrap_or(4);
-        let session = Session::builder()
+
+        let mut builder = Session::builder()
             .map_err(|e| e.to_string())?
             .with_optimization_level(GraphOptimizationLevel::Level3)
             .map_err(|e| e.to_string())?
             .with_intra_threads(threads)
-            .map_err(|e| e.to_string())?
+            .map_err(|e| e.to_string())?;
+
+        // GPU execution providers are compile-time opt-ins (Cargo features).
+        // ort registers them with automatic CPU fallback if unavailable.
+        #[cfg(feature = "directml")]
+        {
+            use ort::execution_providers::DirectMLExecutionProvider;
+            builder = builder
+                .with_execution_providers([DirectMLExecutionProvider::default().build()])
+                .map_err(|e| e.to_string())?;
+        }
+        #[cfg(feature = "coreml")]
+        {
+            use ort::execution_providers::CoreMLExecutionProvider;
+            builder = builder
+                .with_execution_providers([CoreMLExecutionProvider::default().build()])
+                .map_err(|e| e.to_string())?;
+        }
+        #[cfg(feature = "cuda")]
+        {
+            use ort::execution_providers::CUDAExecutionProvider;
+            builder = builder
+                .with_execution_providers([CUDAExecutionProvider::default().build()])
+                .map_err(|e| e.to_string())?;
+        }
+
+        let session = builder
             .commit_from_file(model_path)
             .map_err(|e| e.to_string())?;
         Ok(Self { session })

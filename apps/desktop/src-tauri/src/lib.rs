@@ -18,6 +18,8 @@ use state::AppState;
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_clipboard_manager::init())
         .setup(|app| {
             let remover = match model_manager::resolve_model_path(app.handle()) {
                 Ok(path) => match bg_remover::BgRemover::new(&path) {
@@ -42,7 +44,11 @@ pub fn run() {
         })
         .invoke_handler(tauri::generate_handler![
             commands::check_model_ready,
-            commands::process_image
+            commands::image_info,
+            commands::process_image,
+            commands::batch_process,
+            commands::export_result,
+            commands::copy_result
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
