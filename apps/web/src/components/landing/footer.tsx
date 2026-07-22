@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { WindowsIcon } from "./icons";
+import { MacWaitlistLink } from "./mac-waitlist";
 
 const COLUMNS = [
   {
@@ -51,15 +52,24 @@ export function Footer() {
               <div className="mb-[3px] font-mono text-[11px] uppercase tracking-[0.1em] text-[#5f5f65]">
                 {col.title}
               </div>
-              {col.links.map((l) => (
-                <a
-                  key={l.label}
-                  href={l.href}
-                  className="text-[14px] text-[#a5a5ab] transition-colors hover:text-white"
-                >
-                  {l.label}
-                </a>
-              ))}
+              {col.links.map((l) =>
+                l.label === "Mac version" ? (
+                  <MacWaitlistLink
+                    key={l.label}
+                    className="cursor-pointer text-left text-[14px] text-[#a5a5ab] transition-colors hover:text-white"
+                  >
+                    {l.label}
+                  </MacWaitlistLink>
+                ) : (
+                  <a
+                    key={l.label}
+                    href={l.href}
+                    className="text-[14px] text-[#a5a5ab] transition-colors hover:text-white"
+                  >
+                    {l.label}
+                  </a>
+                ),
+              )}
             </div>
           ))}
         </div>

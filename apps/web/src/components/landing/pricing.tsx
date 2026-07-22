@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { WindowsIcon } from "./icons";
+import { MacWaitlistLink } from "./mac-waitlist";
 
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -161,12 +162,9 @@ export function Pricing() {
             Download for Windows
           </Button>
           <div className="mt-3 text-center">
-            <a
-              href="#"
-              className="border-b border-[#3a3a3a] pb-px text-[13px] text-[#a5a5ab] transition-colors hover:text-brand"
-            >
+            <MacWaitlistLink className="cursor-pointer border-b border-[#3a3a3a] pb-px text-[13px] text-[#a5a5ab] transition-colors hover:text-brand">
               Looking for Mac? →
-            </a>
+            </MacWaitlistLink>
           </div>
         </div>
       </div>

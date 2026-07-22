@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { WindowsIcon } from "./icons";
 import { HeroComposition } from "./hero-composition";
+import { MacWaitlistLink } from "./mac-waitlist";
 
 export function Hero() {
   return (
@@ -46,12 +47,9 @@ export function Hero() {
       </div>
 
       <div className="relative z-[2] mt-[14px]">
-        <a
-          href="#"
-          className="border-b border-[var(--secbtn-hover-border)] pb-px text-[13.5px] font-medium text-body transition-colors hover:text-brand"
-        >
+        <MacWaitlistLink className="cursor-pointer border-b border-[var(--secbtn-hover-border)] pb-px text-[13.5px] font-medium text-body transition-colors hover:text-brand">
           Looking for Mac? →
-        </a>
+        </MacWaitlistLink>
       </div>
 
       <div className="relative z-[2] mt-[14px] font-mono text-[12px] text-[var(--faint-2)]">
