@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { AppWindow } from "@/components/app-window";
 import { EmptyScreen } from "@/screens/empty-screen";
+import { ProcessingScreen } from "@/screens/processing-screen";
 import { AppStoreProvider, useApp } from "@/lib/app-store";
 
 export const Route = createFileRoute("/")({
@@ -19,7 +20,15 @@ function Screens() {
     );
   }
 
-  // Processing and result screens are added in the following steps.
+  if (screen === "processing") {
+    return (
+      <AppWindow>
+        <ProcessingScreen />
+      </AppWindow>
+    );
+  }
+
+  // Result screen is added in the following steps.
   return (
     <AppWindow>
       <div className="flex flex-1 items-center justify-center text-fg-3">
