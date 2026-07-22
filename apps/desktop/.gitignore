@@ -11,3 +11,7 @@ src/routeTree.gen.ts
 
 # Logs
 *.log
+
+# Tauri (Rust build artifacts + generated mobile projects)
+/src-tauri/target
+/src-tauri/gen
