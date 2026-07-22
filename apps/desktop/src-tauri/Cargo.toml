@@ -17,11 +17,14 @@ tauri-build = { version = "2", features = [] }
 tauri = { version = "2", features = [] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+# ONNX Runtime. Model I/O is float32 (confirmed from the graph), so no `half`.
+ort = "2"
+image = "0.25"
 
 [features]
-# Compile-time GPU inference providers for the (future) ONNX Runtime engine.
-# Ship CPU-only by default; enable per platform when the model is wired in.
+# Compile-time GPU inference providers (see MODEL_INTEGRATION plan). Ship
+# CPU-only by default; enable per platform once benchmarked.
 default = []
-directml = []
-coreml = []
-cuda = []
+directml = ["ort/directml"]
+coreml = ["ort/coreml"]
+cuda = ["ort/cuda"]
