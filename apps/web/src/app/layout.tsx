@@ -24,6 +24,17 @@ export const metadata: Metadata = {
   title: "BackgroundGone — Remove the background. Keep everything else.",
   description:
     "A one-click background remover that runs entirely on your PC. No uploads, no account, no subscription — buy it once and it's yours forever.",
+  // Favicons generated with RealFaviconGenerator. Files live in apps/web/public.
+  icons: {
+    icon: [
+      { url: "/favicon-96x96.png", type: "image/png", sizes: "96x96" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+  },
+  manifest: "/site.webmanifest",
+  appleWebApp: { title: "BG Gone" },
 };
 
 export default function RootLayout({
