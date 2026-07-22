@@ -1,15 +1,10 @@
 import { env } from "@backgroundgone/env/server";
-import { PrismaLibSql } from "@prisma/adapter-libsql";
+import { PrismaPg } from "@prisma/adapter-pg";
 
 import { PrismaClient } from "../prisma/generated/client";
 
 export function createPrismaClient() {
-  const adapter = new PrismaLibSql({
-    url: env.DATABASE_URL,
-    // Present for remote Turso databases; omitted for local file: URLs.
-    authToken: env.TURSO_AUTH_TOKEN,
-  });
-
+  const adapter = new PrismaPg({ connectionString: env.DATABASE_URL });
   return new PrismaClient({ adapter });
 }
 

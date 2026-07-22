@@ -16,8 +16,7 @@
     "db:push": "turbo run db:push -F @backgroundgone/db",
     "db:studio": "turbo run db:studio -F @backgroundgone/db",
     "db:generate": "turbo run db:generate -F @backgroundgone/db",
-    "db:migrate": "turbo run db:migrate -F @backgroundgone/db",
-    "db:local": "turbo run db:local -F @backgroundgone/db"
+    "db:migrate": "turbo run db:migrate -F @backgroundgone/db"
   },
   "dependencies": {
     "@backgroundgone/env": "workspace:*",

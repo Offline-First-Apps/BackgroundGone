@@ -10,7 +10,6 @@
     }
   },
   "scripts": {
-    "db:local": "turso dev --db-file local.db",
     "db:push": "prisma db push",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
@@ -19,13 +18,15 @@
   },
   "dependencies": {
     "@backgroundgone/env": "workspace:*",
-    "@prisma/adapter-libsql": "^7.8.0",
+    "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "dotenv": "catalog:",
+    "pg": "^8.13.1",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@backgroundgone/config": "workspace:*",
+    "@types/pg": "^8.11.10",
     "prisma": "^7.8.0",
     "typescript": "catalog:"
   }

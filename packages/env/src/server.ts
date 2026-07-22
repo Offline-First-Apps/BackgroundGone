@@ -4,9 +4,8 @@ import { z } from "zod";
 
 export const env = createEnv({
   server: {
-    // Database (Turso / libSQL). Local dev can use a file: URL with no token.
+    // PostgreSQL connection string.
     DATABASE_URL: z.string().min(1),
-    TURSO_AUTH_TOKEN: z.string().optional(),
 
     CORS_ORIGIN: z.url(),
     NODE_ENV: z
