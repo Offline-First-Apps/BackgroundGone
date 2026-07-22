@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { AppWindow } from "@/components/app-window";
+import { StartOverButton } from "@/components/start-over-button";
 import { EmptyScreen } from "@/screens/empty-screen";
 import { ProcessingScreen } from "@/screens/processing-screen";
+import { ResultScreen } from "@/screens/result-screen";
 import { AppStoreProvider, useApp } from "@/lib/app-store";
 
 export const Route = createFileRoute("/")({
@@ -28,12 +30,9 @@ function Screens() {
     );
   }
 
-  // Result screen is added in the following steps.
   return (
-    <AppWindow>
-      <div className="flex flex-1 items-center justify-center text-fg-3">
-        {screen}
-      </div>
+    <AppWindow titlebarLeft={<StartOverButton />}>
+      <ResultScreen />
     </AppWindow>
   );
 }
