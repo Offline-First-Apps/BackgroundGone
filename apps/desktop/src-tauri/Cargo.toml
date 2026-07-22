@@ -14,13 +14,15 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
-tauri = { version = "2", features = [] }
+tauri = { version = "2", features = ["protocol-asset"] }
 tauri-plugin-dialog = "2"
 tauri-plugin-clipboard-manager = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-# ONNX Runtime. Model I/O is float32 (confirmed from the graph), so no `half`.
-ort = "2"
+# ONNX Runtime. 2.0 is still pre-release, so pin an rc. Defaults include the
+# prebuilt-binary download (linked in → offline-friendly). Model I/O is
+# float32 (confirmed from the graph), so no `half`.
+ort = "=2.0.0-rc.10"
 image = "0.25"
 
 [features]

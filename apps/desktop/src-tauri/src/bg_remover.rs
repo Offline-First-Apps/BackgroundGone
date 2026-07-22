@@ -68,10 +68,8 @@ impl BgRemover {
         ))
         .map_err(|e| e.to_string())?;
 
-        let outputs = self
-            .session
-            .run(ort::inputs!["pixel_values" => input])
-            .map_err(|e| e.to_string())?;
+        let inputs = ort::inputs!["pixel_values" => input].map_err(|e| e.to_string())?;
+        let outputs = self.session.run(inputs).map_err(|e| e.to_string())?;
 
         let (_shape, mask) = outputs["alphas"]
             .try_extract_tensor::<f32>()
