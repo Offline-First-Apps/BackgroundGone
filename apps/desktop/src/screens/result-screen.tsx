@@ -1,4 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -55,7 +60,9 @@ export function ResultScreen() {
   const [dragging, setDragging] = useState(false);
   const [loupe, setLoupe] = useState<LoupeState | null>(null);
   const [copied, setCopied] = useState(false);
-  const copiedTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const copiedTimer = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
 
   async function handleCopy() {
     if (!result) return;
@@ -96,8 +103,11 @@ export function ResultScreen() {
     };
   }, [dragging]);
 
-  function updateLoupe(e: React.PointerEvent) {
-    if (dragging) return setLoupe(null);
+  function updateLoupe(e: ReactPointerEvent<HTMLDivElement>) {
+    if (dragging) {
+      setLoupe(null);
+      return;
+    }
     const img = resultImgRef.current;
     const pane = resultPaneRef.current;
     if (!img || !pane) return;
