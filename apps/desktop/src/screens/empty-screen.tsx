@@ -4,6 +4,8 @@ import { DropZone } from "@/components/drop-zone";
 import { WindowFooter } from "@/components/window-footer";
 import { useApp } from "@/lib/app-store";
 import { ACCEPTED_TYPES, isAcceptedImage, readImageMeta } from "@/lib/image";
+import * as native from "@/lib/native";
+import { inTauri } from "@/lib/window-controls";
 
 export function EmptyScreen() {
   const { startProcessing } = useApp();
@@ -11,30 +13,65 @@ export function EmptyScreen() {
   const inputRef = useRef<HTMLInputElement>(null);
   const dragDepth = useRef(0);
 
+  // Browser: intake from a File.
   const handleFiles = useCallback(
     async (files: FileList | null) => {
       if (!files || files.length === 0) return;
       const file = Array.from(files).find(isAcceptedImage);
       if (!file) return;
-      const meta = await readImageMeta(file);
-      startProcessing(meta);
+      startProcessing(await readImageMeta(file));
     },
     [startProcessing],
   );
 
-  const openPicker = useCallback(() => inputRef.current?.click(), []);
+  // Tauri: intake from an OS path.
+  const handlePath = useCallback(
+    async (path: string) => {
+      startProcessing(await native.intakeFromPath(path));
+    },
+    [startProcessing],
+  );
 
-  // Ctrl/Cmd+O opens the file picker, matching the on-screen hint.
+  const openPicker = useCallback(async () => {
+    if (inTauri()) {
+      const path = await native.pickImagePath();
+      if (path) await handlePath(path);
+    } else {
+      inputRef.current?.click();
+    }
+  }, [handlePath]);
+
+  // Ctrl/Cmd+O opens the picker, matching the on-screen hint.
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "o") {
         e.preventDefault();
-        openPicker();
+        void openPicker();
       }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [openPicker]);
+
+  // Tauri delivers OS file drops as path events (DOM drop is suppressed).
+  useEffect(() => {
+    if (!inTauri()) return;
+    let unlisten: (() => void) | undefined;
+    void (async () => {
+      const { getCurrentWebview } = await import("@tauri-apps/api/webview");
+      unlisten = await getCurrentWebview().onDragDropEvent((event) => {
+        const p = event.payload;
+        if (p.type === "enter" || p.type === "over") setDragging(true);
+        else if (p.type === "leave") setDragging(false);
+        else if (p.type === "drop") {
+          setDragging(false);
+          const path = p.paths?.[0];
+          if (path) void handlePath(path);
+        }
+      });
+    })();
+    return () => unlisten?.();
+  }, [handlePath]);
 
   return (
     <>
@@ -59,11 +96,11 @@ export function EmptyScreen() {
       >
         <DropZone
           dragging={dragging}
-          onClick={openPicker}
+          onClick={() => void openPicker()}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
               e.preventDefault();
-              openPicker();
+              void openPicker();
             }
           }}
         />

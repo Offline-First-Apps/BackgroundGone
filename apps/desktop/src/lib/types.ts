@@ -2,13 +2,15 @@ export type Screen = "empty" | "processing" | "result";
 
 export type ExportFormat = "png" | "jpg";
 
-/** Metadata for a loaded source image. `url` is an object URL for preview. */
+/** Metadata for a loaded source image. `url` is a preview URL; `path` is the
+ * OS path (present only under Tauri, used for native inference). */
 export interface ImageMeta {
   name: string;
   width: number;
   height: number;
   sizeBytes: number;
   url: string;
+  path?: string;
 }
 
 /** The produced (background-removed) image. */
@@ -18,6 +20,7 @@ export interface ResultMeta {
   sizeBytes: number;
   width: number;
   height: number;
+  path?: string;
 }
 
 /** A step in the (currently simulated) removal pipeline. */

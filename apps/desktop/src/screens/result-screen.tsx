@@ -11,6 +11,8 @@ import { WindowFooter } from "@/components/window-footer";
 import { useApp } from "@/lib/app-store";
 import { copyResultToClipboard, downloadResult } from "@/lib/export-image";
 import { formatBytes, formatDimensions } from "@/lib/image";
+import * as native from "@/lib/native";
+import { inTauri } from "@/lib/window-controls";
 
 const LOUPE = 92;
 const ZOOM = 1.5;
@@ -67,7 +69,8 @@ export function ResultScreen() {
   async function handleCopy() {
     if (!result) return;
     try {
-      await copyResultToClipboard(result.url);
+      if (inTauri() && result.path) await native.copyResult(result.path);
+      else await copyResultToClipboard(result.url);
       setCopied(true);
       clearTimeout(copiedTimer.current);
       copiedTimer.current = setTimeout(() => setCopied(false), 2000);
@@ -78,7 +81,11 @@ export function ResultScreen() {
 
   function handleExport(format: "png" | "jpg") {
     if (!result) return;
-    void downloadResult(result.url, source?.name ?? "image", format);
+    if (inTauri() && result.path) {
+      void native.exportResult(result.path, format, source?.name ?? "image");
+    } else {
+      void downloadResult(result.url, source?.name ?? "image", format);
+    }
   }
 
   useEffect(() => () => clearTimeout(copiedTimer.current), []);
