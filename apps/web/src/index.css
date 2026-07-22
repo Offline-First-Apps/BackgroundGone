@@ -13,12 +13,12 @@
   --brand: #ff6b6b;
   --brand-hover: #f65454;
   --brand-soft: #ff8b8b;
-  --ok: #16a34a;
   --tl-red: #ff5f57;
   --tl-yellow: #febc2e;
   --tl-green: #28c840;
 
   /* ---- LIGHT ---- */
+  --ok: #16a34a;
   --page: #ffffff;
   --card: #fafafa;
   --card-border: #f1f1f3;
@@ -73,6 +73,7 @@
 }
 
 .dark {
+  --ok: #28c840;
   --page: #0b0b0b;
   --card: #161616;
   --card-border: #232323;
