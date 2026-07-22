@@ -67,6 +67,19 @@
   --price-card: #18181b;
   --price-card-border: transparent;
 
+  /* product screenshot chrome (dark in both themes) */
+  --shot-bg: #121212;
+  --shot-border: #262626;
+
+  /* floating hero stat cards */
+  --float-bg: #ffffff;
+  --float-border: #ececee;
+  --dark-card-bg: #18181b;
+  --green-soft-bg: #dcfce7;
+  --green-soft-fg: #14532d;
+  --green-soft-fg2: #166534;
+  --green-soft-icon: #16a34a;
+
   --font-sans-stack: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
   --font-mono-stack: var(--font-geist-mono), ui-monospace, monospace;
   --font-serif-stack: var(--font-instrument-serif), Georgia, serif;
@@ -122,6 +135,17 @@
   --footer-bg: #000000;
   --price-card: #161616;
   --price-card-border: #232323;
+
+  --shot-bg: #161616;
+  --shot-border: #2a2a2a;
+
+  --float-bg: #161616;
+  --float-border: #232323;
+  --dark-card-bg: #232323;
+  --green-soft-bg: #132a1c;
+  --green-soft-fg: #bbf7d0;
+  --green-soft-fg2: #86efac;
+  --green-soft-icon: #4ade80;
 }
 
 @theme inline {
