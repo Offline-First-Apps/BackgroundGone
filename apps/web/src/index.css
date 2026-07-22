@@ -63,6 +63,8 @@
   /* dark panels (dark in both themes; slight per-theme differences) */
   --own-bg: #0e0e0e;
   --own-border: transparent;
+  --own-card-bg: #161616;
+  --own-card-border: #2a2a2a;
   --footer-bg: #0e0e0e;
   --price-card: #18181b;
   --price-card-border: transparent;
@@ -132,6 +134,8 @@
 
   --own-bg: #161616;
   --own-border: #232323;
+  --own-card-bg: #0b0b0b;
+  --own-card-border: #232323;
   --footer-bg: #000000;
   --price-card: #161616;
   --price-card-border: #232323;
