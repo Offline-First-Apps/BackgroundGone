@@ -82,6 +82,24 @@
   --green-soft-fg2: #166534;
   --green-soft-icon: #16a34a;
 
+  /* soft (theme-aware) compare textures for the feature card */
+  --stripe-a: #f1f1f3;
+  --stripe-b: #e7e7ea;
+  --check-base: #f5f5f5;
+  --check-square: #e2e2e4;
+
+  /* feature icon accent tiles */
+  --acc-coral-bg: #ffe4dd;
+  --acc-coral-fg: #ff6b6b;
+  --acc-green-bg: #dcfce7;
+  --acc-green-fg: #16a34a;
+  --acc-yellow-bg: #fef9c3;
+  --acc-yellow-fg: #a16207;
+  --acc-indigo-bg: #e0e7ff;
+  --acc-indigo-fg: #4f46e5;
+  --acc-fuchsia-bg: #fae8ff;
+  --acc-fuchsia-fg: #a21caf;
+
   --font-sans-stack: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
   --font-mono-stack: var(--font-geist-mono), ui-monospace, monospace;
   --font-serif-stack: var(--font-instrument-serif), Georgia, serif;
@@ -150,6 +168,22 @@
   --green-soft-fg: #bbf7d0;
   --green-soft-fg2: #86efac;
   --green-soft-icon: #4ade80;
+
+  --stripe-a: #1c1c1c;
+  --stripe-b: #232323;
+  --check-base: #1a1a1a;
+  --check-square: #262626;
+
+  --acc-coral-bg: rgba(255, 107, 107, 0.15);
+  --acc-coral-fg: #ff8b8b;
+  --acc-green-bg: rgba(74, 222, 128, 0.14);
+  --acc-green-fg: #4ade80;
+  --acc-yellow-bg: rgba(253, 224, 71, 0.14);
+  --acc-yellow-fg: #fde047;
+  --acc-indigo-bg: rgba(129, 140, 248, 0.16);
+  --acc-indigo-fg: #818cf8;
+  --acc-fuchsia-bg: rgba(232, 121, 249, 0.16);
+  --acc-fuchsia-fg: #e879f9;
 }
 
 @theme inline {
@@ -248,4 +282,24 @@ body {
     #232323 11px,
     #232323 22px
   );
+}
+
+/* Theme-aware textures (feature card mini-compare) */
+.stripes-soft {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--stripe-a),
+    var(--stripe-a) 11px,
+    var(--stripe-b) 11px,
+    var(--stripe-b) 22px
+  );
+}
+.checkerboard-soft {
+  background-color: var(--check-base);
+  background-image: linear-gradient(45deg, var(--check-square) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--check-square) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--check-square) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--check-square) 75%);
+  background-size: 18px 18px;
+  background-position: 0 0, 0 9px, 9px -9px, -9px 0;
 }

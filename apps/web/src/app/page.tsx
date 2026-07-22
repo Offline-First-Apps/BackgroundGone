@@ -1,3 +1,4 @@
+import { Features } from "@/components/landing/features";
 import { Hero } from "@/components/landing/hero";
 import { LogoStrip } from "@/components/landing/logo-strip";
 import { Nav } from "@/components/landing/nav";
@@ -10,6 +11,7 @@ export default function Home() {
       <Hero />
       <LogoStrip />
       <YouOwnIt />
+      <Features />
       {/* Remaining sections are added in the next steps. */}
     </div>
   );
