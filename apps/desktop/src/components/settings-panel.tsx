@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, type ReactNode } from "react";
 
 import * as native from "@/lib/native";
 import { useSettings } from "@/lib/settings-store";
@@ -68,7 +68,7 @@ function Row({
 }: {
   title: string;
   desc?: string;
-  children: React.ReactNode;
+  children: ReactNode;
   inline?: boolean;
 }) {
   return (
