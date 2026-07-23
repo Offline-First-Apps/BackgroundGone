@@ -5,6 +5,7 @@ import { Webhook } from "standardwebhooks";
 import { z } from "zod";
 
 import { getDodoClient } from "../lib/dodo";
+import { sendPurchaseEmail } from "../lib/mailer";
 
 const checkoutSchema = z.object({
   email: z.email().optional(),
@@ -119,7 +120,11 @@ export async function handleDodoWebhook(c: Context) {
   const status = statusFromEvent(event.type ?? "");
 
   if (orderId && status) {
-    await prisma.order
+    const prev = await prisma.order
+      .findUnique({ where: { id: orderId } })
+      .catch(() => null);
+
+    const order = await prisma.order
       .update({
         where: { id: orderId },
         data: {
@@ -132,8 +137,40 @@ export async function handleDodoWebhook(c: Context) {
             data.license_keys?.join(",") ?? data.license_key ?? undefined,
         },
       })
-      .catch((err) => console.error("[webhook] order update failed", err));
+      .catch((err) => {
+        console.error("[webhook] order update failed", err);
+        return null;
+      });
+
+    // Send the purchase email once — only on the transition into "succeeded".
+    if (order && status === "succeeded" && prev?.status !== "succeeded") {
+      const to = order.email || data.customer?.email;
+      if (to) {
+        void sendPurchaseEmail({
+          to,
+          name: order.name ?? undefined,
+          downloadUrl: `${env.SERVER_PUBLIC_URL}/api/download/${order.id}`,
+        }).catch((e) => console.error("[mail] send failed", e));
+      }
+    }
   }
 
   return c.json({ received: true });
+}
+
+/**
+ * Gated installer download used by the purchase email's button (a "magic
+ * link"). Verifies the order succeeded, then redirects to the installer.
+ */
+export async function downloadOrder(c: Context) {
+  const order = await prisma.order.findUnique({
+    where: { id: c.req.param("id") },
+  });
+  if (!order || order.status !== "succeeded") {
+    return c.text("This download link is not valid.", 404);
+  }
+  if (!env.DOWNLOAD_URL) {
+    return c.text("The download isn't available yet — please contact support.", 503);
+  }
+  return c.redirect(env.DOWNLOAD_URL);
 }

@@ -15,12 +15,14 @@
     "dodopayments": "^2.42.2",
     "dotenv": "catalog:",
     "hono": "^4.12.27",
+    "nodemailer": "^6.10.1",
     "standardwebhooks": "^1.0.0",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@backgroundgone/config": "workspace:*",
     "@types/bun": "catalog:",
+    "@types/nodemailer": "^6.4.17",
     "tsdown": "^0.22.3",
     "typescript": "catalog:"
   }

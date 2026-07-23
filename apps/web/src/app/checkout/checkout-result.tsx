@@ -58,7 +58,7 @@ export function CheckoutResult() {
         icon={<path d="M20 6L9 17l-5-5" />}
         title="Payment complete."
         emphasis="It's yours."
-        body="Thanks for buying BackgroundGone. Your download link and license key are on their way to your inbox — check your email to install."
+        body="Thanks for buying BackgroundGone. Your download link is on its way to your inbox — if you don't see it in a minute, check your spam folder."
       >
         {order?.licenseKey && (
           <div className="mt-1 w-full rounded-xl border border-card-border bg-page px-4 py-3 text-center font-mono text-[13px] text-fg">

@@ -14,6 +14,8 @@ export const env = createEnv({
 
     // Public URL of the web app, used for payment return URLs.
     WEB_URL: z.url().default("http://localhost:3001"),
+    // Public URL of THIS server, used to build email download links.
+    SERVER_PUBLIC_URL: z.url().default("http://localhost:3000"),
 
     // Dodo Payments. Optional so the server boots without them in dev;
     // the payment endpoints validate presence at request time.
@@ -23,6 +25,17 @@ export const env = createEnv({
     DODO_PAYMENTS_ENVIRONMENT: z
       .enum(["test_mode", "live_mode"])
       .default("test_mode"),
+
+    // Email (nodemailer over Gmail SMTP). Optional so the server boots
+    // without them; the mailer no-ops until SMTP_USER + SMTP_PASS are set.
+    SMTP_HOST: z.string().default("smtp.gmail.com"),
+    SMTP_PORT: z.coerce.number().default(465),
+    SMTP_USER: z.string().optional(),
+    SMTP_PASS: z.string().optional(),
+    MAIL_FROM: z.string().optional(),
+    // Direct-download URL of the installer (e.g. an S3/R2 link that forces
+    // attachment). The purchase email's button redirects here.
+    DOWNLOAD_URL: z.string().optional(),
   },
   runtimeEnv: process.env,
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,

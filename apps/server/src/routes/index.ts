@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 
-import { paymentsRoute, webhooksRoute } from "./payments.route";
+import { downloadRoute, paymentsRoute, webhooksRoute } from "./payments.route";
 import { waitlistRoute } from "./waitlist.route";
 
 /**
@@ -13,3 +13,4 @@ apiRoutes.get("/health", (c) => c.json({ status: "ok" }));
 apiRoutes.route("/waitlist", waitlistRoute);
 apiRoutes.route("/payments", paymentsRoute);
 apiRoutes.route("/webhooks", webhooksRoute);
+apiRoutes.route("/download", downloadRoute);
