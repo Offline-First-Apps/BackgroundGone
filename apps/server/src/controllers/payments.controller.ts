@@ -146,10 +146,14 @@ export async function handleDodoWebhook(c: Context) {
     if (order && status === "succeeded" && prev?.status !== "succeeded") {
       const to = order.email || data.customer?.email;
       if (to) {
+        // Prefer the direct installer URL from the env var. Fall back to the
+        // gated magic-link endpoint only when DOWNLOAD_URL isn't configured.
+        const downloadUrl =
+          env.DOWNLOAD_URL ?? `${env.SERVER_PUBLIC_URL}/api/download/${order.id}`;
         void sendPurchaseEmail({
           to,
           name: order.name ?? undefined,
-          downloadUrl: `${env.SERVER_PUBLIC_URL}/api/download/${order.id}`,
+          downloadUrl,
         }).catch((e) => console.error("[mail] send failed", e));
       }
     }
