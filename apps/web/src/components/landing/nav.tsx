@@ -10,9 +10,13 @@ export function Nav() {
   return (
     <nav className="relative z-10 flex items-center justify-between gap-3 px-5 py-4 sm:px-[34px] sm:py-[22px]">
       <a href="#top" className="flex items-center gap-[11px]">
-        <span className="flex size-[34px] items-center justify-center rounded-[10px] bg-[var(--logo-sq)]">
-          <span className="size-[18px] rounded-[6px] bg-[var(--logo-sq-inner)]" />
-        </span>
+        <img
+          src="/icon1.png"
+          alt="BackgroundGone"
+          width={34}
+          height={34}
+          className="size-[34px] rounded-[10px]"
+        />
         <span className="text-[17px] font-semibold tracking-[-0.02em] text-fg">
           BackgroundGone
         </span>

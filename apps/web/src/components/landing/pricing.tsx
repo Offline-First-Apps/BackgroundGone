@@ -129,9 +129,13 @@ export function Pricing() {
             SAVE $1
           </div>
           <div className="flex items-center gap-2.5">
-            <span className="flex size-[26px] items-center justify-center rounded-[7px] bg-brand">
-              <span className="size-[13px] rounded-[4px] bg-[var(--price-card)]" />
-            </span>
+            <img
+              src="/icon1.png"
+              alt="BackgroundGone"
+              width={26}
+              height={26}
+              className="size-[26px] rounded-[7px]"
+            />
             <span className="text-[14px] font-semibold">BackgroundGone</span>
           </div>
           <div className="mt-[18px] flex items-baseline gap-2.5">

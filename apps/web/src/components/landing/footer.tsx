@@ -27,9 +27,13 @@ export function Footer() {
       <div className="flex flex-wrap justify-between gap-12 border-b border-[#232323] pb-[44px]">
         <div className="max-w-[400px]">
           <div className="mb-5 flex items-center gap-[11px]">
-            <span className="flex size-8 items-center justify-center rounded-[9px] bg-brand">
-              <span className="size-4 rounded-[5px] bg-[var(--footer-bg)]" />
-            </span>
+            <img
+              src="/icon1.png"
+              alt="BackgroundGone"
+              width={32}
+              height={32}
+              className="size-8 rounded-[9px]"
+            />
             <span className="text-[17px] font-semibold tracking-[-0.02em]">
               BackgroundGone
             </span>

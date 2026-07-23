@@ -14,8 +14,10 @@ export const env = createEnv({
 
     // Public URL of the web app, used for payment return URLs.
     WEB_URL: z.url().default("http://localhost:3001"),
-    // Public URL of THIS server, used to build email download links.
-    SERVER_PUBLIC_URL: z.url().default("http://localhost:3000"),
+    // Public URL of THIS server, used to build email download links. Optional:
+    // when unset it's derived from the request's forwarded headers, so links
+    // use the real public host instead of localhost.
+    SERVER_PUBLIC_URL: z.url().optional(),
 
     // Dodo Payments. Optional so the server boots without them in dev;
     // the payment endpoints validate presence at request time.

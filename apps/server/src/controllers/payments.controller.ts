@@ -13,6 +13,23 @@ const checkoutSchema = z.object({
 });
 
 /**
+ * Public base URL of this server. Prefers SERVER_PUBLIC_URL when set; otherwise
+ * derives it from the incoming request's forwarded headers (set by Coolify /
+ * traefik in front of the app), so generated links use the real public host
+ * instead of localhost.
+ */
+function publicBaseUrl(c: Context): string {
+  if (env.SERVER_PUBLIC_URL) return env.SERVER_PUBLIC_URL.replace(/\/+$/, "");
+  const proto =
+    c.req.header("x-forwarded-proto")?.split(",")[0]?.trim() ?? "https";
+  const host =
+    c.req.header("x-forwarded-host")?.split(",")[0]?.trim() ??
+    c.req.header("host") ??
+    new URL(c.req.url).host;
+  return `${proto}://${host}`;
+}
+
+/**
  * Create a pending Order, open a Dodo checkout session referencing it via
  * metadata, and return the hosted checkout URL for the client to redirect to.
  */
@@ -146,10 +163,10 @@ export async function handleDodoWebhook(c: Context) {
     if (order && status === "succeeded" && prev?.status !== "succeeded") {
       const to = order.email || data.customer?.email;
       if (to) {
-        // Prefer the direct installer URL from the env var. Fall back to the
-        // gated magic-link endpoint only when DOWNLOAD_URL isn't configured.
-        const downloadUrl =
-          env.DOWNLOAD_URL ?? `${env.SERVER_PUBLIC_URL}/api/download/${order.id}`;
+        // Always route through our download endpoint so the file is served as
+        // an attachment (forces a download instead of opening in the browser)
+        // and the link stays gated behind a valid order.
+        const downloadUrl = `${publicBaseUrl(c)}/api/download/${order.id}`;
         void sendPurchaseEmail({
           to,
           name: order.name ?? undefined,
@@ -176,5 +193,27 @@ export async function downloadOrder(c: Context) {
   if (!env.DOWNLOAD_URL) {
     return c.text("The download isn't available yet — please contact support.", 503);
   }
-  return c.redirect(env.DOWNLOAD_URL);
+
+  // Stream the installer through our server with an attachment disposition so
+  // the browser downloads it instead of rendering it inline (R2/S3 public URLs
+  // serve inline by default, which just opens the file in a new tab).
+  const upstream = await fetch(env.DOWNLOAD_URL).catch(() => null);
+  if (!upstream || !upstream.ok || !upstream.body) {
+    return c.text("The download is temporarily unavailable — please try again.", 502);
+  }
+
+  const ext = new URL(env.DOWNLOAD_URL).pathname.split(".").pop() || "bin";
+  const filename = `BackgroundGone-Setup.${ext}`;
+
+  const headers = new Headers();
+  headers.set(
+    "Content-Type",
+    upstream.headers.get("content-type") ?? "application/octet-stream",
+  );
+  const len = upstream.headers.get("content-length");
+  if (len) headers.set("Content-Length", len);
+  headers.set("Content-Disposition", `attachment; filename="${filename}"`);
+  headers.set("Cache-Control", "no-store");
+
+  return new Response(upstream.body, { status: 200, headers });
 }

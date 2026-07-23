@@ -1,6 +1,8 @@
 import { env } from "@backgroundgone/env/server";
 import nodemailer, { type Transporter } from "nodemailer";
 
+import { BRAND_LOGO_BASE64, BRAND_LOGO_CID } from "./logo";
+
 let transporter: Transporter | null = null;
 
 /** Returns a Gmail SMTP transport, or null when SMTP isn't configured. */
@@ -45,8 +47,8 @@ function renderPurchaseEmail({ name, downloadUrl }: PurchaseEmail): {
               <td style="padding:24px 32px;border-bottom:1px solid #f1f1f3;">
                 <table role="presentation" cellpadding="0" cellspacing="0">
                   <tr>
-                    <td style="width:34px;height:34px;background:#18181b;border-radius:9px;text-align:center;vertical-align:middle;">
-                      <span style="display:inline-block;width:16px;height:16px;background:#ff6b6b;border-radius:5px;"></span>
+                    <td style="vertical-align:middle;">
+                      <img src="cid:${BRAND_LOGO_CID}" width="34" height="34" alt="BackgroundGone" style="display:block;border-radius:9px;" />
                     </td>
                     <td style="padding-left:11px;font-size:17px;font-weight:bold;letter-spacing:-0.02em;color:#18181b;">
                       BackgroundGone
@@ -138,5 +140,13 @@ export async function sendPurchaseEmail(opts: PurchaseEmail): Promise<void> {
     to: opts.to,
     subject: "Your BackgroundGone download",
     ...renderPurchaseEmail(opts),
+    attachments: [
+      {
+        filename: "backgroundgone.png",
+        content: BRAND_LOGO_BASE64,
+        encoding: "base64",
+        cid: BRAND_LOGO_CID, // referenced as <img src="cid:..."> in the header
+      },
+    ],
   });
 }

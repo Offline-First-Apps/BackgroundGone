@@ -61,7 +61,13 @@ export function HeroComposition() {
             <span className="size-[11px] rounded-full bg-[var(--tl-green)]" />
           </div>
           <div className="ml-[14px] flex items-center gap-2">
-            <span className="size-[15px] rounded-[5px] bg-brand" />
+            <img
+              src="/icon1.png"
+              alt=""
+              width={15}
+              height={15}
+              className="size-[15px] rounded-[5px]"
+            />
             <span className="text-[12.5px] font-semibold text-[#e4e4e7]">
               BackgroundGone
             </span>
