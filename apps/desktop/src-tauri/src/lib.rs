@@ -7,8 +7,10 @@ mod bg_remover;
 mod commands;
 mod image_ops;
 mod model_manager;
+mod settings;
 mod state;
 
+use std::sync::atomic::AtomicBool;
 use std::sync::Mutex;
 
 use tauri::Manager;
@@ -37,16 +39,23 @@ pub fn run() {
                     None
                 }
             };
+            let settings = settings::load(app.handle());
             app.manage(AppState {
                 remover: Mutex::new(remover),
+                settings: Mutex::new(settings),
+                cancel: AtomicBool::new(false),
             });
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
             commands::check_model_ready,
+            commands::engine_info,
             commands::image_info,
+            commands::expand_paths,
+            commands::cancel_processing,
+            commands::get_settings,
+            commands::set_settings,
             commands::process_image,
-            commands::batch_process,
             commands::export_result,
             commands::copy_result
         ])
