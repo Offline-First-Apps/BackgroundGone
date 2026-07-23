@@ -1,6 +1,34 @@
-export type Screen = "empty" | "processing" | "result";
+export type Screen = "empty" | "processing" | "result" | "batch";
 
 export type ExportFormat = "png" | "jpg";
+
+export type BatchStatus = "queued" | "processing" | "done" | "failed";
+
+/** One image in the batch queue. */
+export interface BatchItem {
+  id: string;
+  name: string;
+  path?: string;
+  url?: string;
+  status: BatchStatus;
+  outputPath?: string;
+  error?: string;
+}
+
+/** Persisted user settings (mirrors the Rust AppSettings). */
+export interface Settings {
+  format: ExportFormat;
+  outputDir: string | null;
+  quality: "fast" | "best";
+  gpu: boolean;
+  suffix: string;
+}
+
+export interface EngineInfo {
+  provider: string;
+  gpu: boolean;
+  ready: boolean;
+}
 
 /** Metadata for a loaded source image. `url` is a preview URL; `path` is the
  * OS path (present only under Tauri, used for native inference). */

@@ -3,7 +3,9 @@ import { Progress } from "@/components/ui/progress";
 import { WindowFooter } from "@/components/window-footer";
 import { useApp } from "@/lib/app-store";
 import { formatBytes, formatDimensions } from "@/lib/image";
+import * as native from "@/lib/native";
 import { useRemoval } from "@/lib/use-removal";
+import { inTauri } from "@/lib/window-controls";
 import { STAGES, stageStatus, type StageStatus } from "@/lib/types";
 
 const STAGE_CAPTIONS = [
@@ -49,6 +51,11 @@ function StageRow({ label, status }: { label: string; status: StageStatus }) {
 export function ProcessingScreen() {
   const { source, progress, stageIndex, reset } = useApp();
   useRemoval();
+
+  function handleCancel() {
+    if (inTauri()) void native.cancelProcessing();
+    reset();
+  }
   const remaining = Math.max(1, Math.ceil(((100 - progress) / 100) * 4));
   const caption = STAGE_CAPTIONS[Math.min(stageIndex, STAGE_CAPTIONS.length - 1)];
 
@@ -108,7 +115,7 @@ export function ProcessingScreen() {
             ? `${source.name} · ${formatDimensions(source.width, source.height)} · ${formatBytes(source.sizeBytes)}`
             : ""}
         </span>
-        <Button variant="control" size="wide" onClick={reset}>
+        <Button variant="control" size="wide" onClick={handleCancel}>
           Cancel
         </Button>
       </WindowFooter>

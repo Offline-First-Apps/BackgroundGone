@@ -4,7 +4,13 @@
 import { convertFileSrc, invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 
-import type { ExportFormat, ImageMeta, ResultMeta } from "./types";
+import type {
+  EngineInfo,
+  ExportFormat,
+  ImageMeta,
+  ResultMeta,
+  Settings,
+} from "./types";
 
 export const ACCEPT_EXTS = ["png", "jpg", "jpeg", "webp"];
 
@@ -22,18 +28,23 @@ function stripExt(name: string): string {
   return name.replace(/\.[^.]+$/, "");
 }
 
-/** Native open dialog → absolute path (or null if cancelled). */
-export async function pickImagePath(): Promise<string | null> {
+/** Native open dialog → absolute path(s). */
+export async function pickImages(multiple = false): Promise<string[]> {
   const { open } = await import("@tauri-apps/plugin-dialog");
   const selected = await open({
-    multiple: false,
+    multiple,
     filters: [{ name: "Images", extensions: ACCEPT_EXTS }],
   });
-  return typeof selected === "string" ? selected : null;
+  if (!selected) return [];
+  return Array.isArray(selected) ? selected : [selected];
 }
 
-/** Build ImageMeta for a path — dimensions/size come from Rust, preview via
- * the asset protocol (no bytes cross the IPC bridge). */
+/** Expand a drop/selection: directories → contained images. */
+export function expandPaths(paths: string[]): Promise<string[]> {
+  return invoke<string[]>("expand_paths", { paths });
+}
+
+/** Build ImageMeta for a path — dimensions/size from Rust, preview via asset. */
 export async function intakeFromPath(path: string): Promise<ImageMeta> {
   const info = await invoke<ImageInfo>("image_info", { path });
   return {
@@ -51,19 +62,16 @@ export interface ProgressEvent {
   percent: number;
 }
 
-/** Run real inference; forwards Rust `process-progress` events to `onProgress`. */
+/** Run real inference; forwards `process-progress` events to `onProgress`. */
 export async function runRemoval(
   inputPath: string,
-  onProgress: (p: ProgressEvent) => void,
+  onProgress?: (p: ProgressEvent) => void,
 ): Promise<ResultMeta> {
-  const unlisten = await listen<ProgressEvent>("process-progress", (e) =>
-    onProgress(e.payload),
-  );
+  const unlisten = onProgress
+    ? await listen<ProgressEvent>("process-progress", (e) => onProgress(e.payload))
+    : undefined;
   try {
-    const outPath = await invoke<string>("process_image", {
-      inputPath,
-      format: "png",
-    });
+    const outPath = await invoke<string>("process_image", { inputPath });
     const info = await invoke<ImageInfo>("image_info", { path: outPath });
     return {
       url: convertFileSrc(outPath),
@@ -74,12 +82,27 @@ export async function runRemoval(
       height: info.height,
     };
   } finally {
-    unlisten();
+    unlisten?.();
   }
 }
 
-/** Save-as dialog + write the result in the chosen format. Returns false if
- * the user cancelled. */
+export function cancelProcessing(): Promise<void> {
+  return invoke("cancel_processing");
+}
+
+export function getSettings(): Promise<Settings> {
+  return invoke<Settings>("get_settings");
+}
+
+export function setSettings(settings: Settings): Promise<void> {
+  return invoke("set_settings", { settings });
+}
+
+export function getEngineInfo(): Promise<EngineInfo> {
+  return invoke<EngineInfo>("engine_info");
+}
+
+/** Save-as dialog + write the result in the chosen format. */
 export async function exportResult(
   srcPath: string,
   format: ExportFormat,
@@ -97,4 +120,8 @@ export async function exportResult(
 
 export async function copyResult(srcPath: string): Promise<void> {
   await invoke("copy_result", { srcPath });
+}
+
+export function openFolder(path: string): Promise<void> {
+  return invoke("open_folder", { path });
 }
