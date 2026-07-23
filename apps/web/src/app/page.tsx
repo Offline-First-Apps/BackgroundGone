@@ -1,3 +1,4 @@
+import { CompareDemo } from "@/components/landing/compare-demo";
 import { Features } from "@/components/landing/features";
 import { Footer } from "@/components/landing/footer";
 import { Hero } from "@/components/landing/hero";
@@ -17,6 +18,7 @@ export default function Home() {
         <Nav />
         <Hero />
         <LogoStrip />
+        <CompareDemo />
         <YouOwnIt />
         <Features />
         <Stats />

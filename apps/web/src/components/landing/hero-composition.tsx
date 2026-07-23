@@ -1,7 +1,3 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
-
 function BoltIcon() {
   return (
     <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -28,31 +24,9 @@ function ShieldIcon() {
 }
 
 export function HeroComposition() {
-  const bodyRef = useRef<HTMLDivElement>(null);
-  const [divider, setDivider] = useState(50);
-  const [dragging, setDragging] = useState(false);
-
-  useEffect(() => {
-    if (!dragging) return;
-    function move(e: PointerEvent) {
-      const r = bodyRef.current?.getBoundingClientRect();
-      if (!r) return;
-      setDivider(Math.min(85, Math.max(15, ((e.clientX - r.left) / r.width) * 100)));
-    }
-    function up() {
-      setDragging(false);
-    }
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", up);
-    return () => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", up);
-    };
-  }, [dragging]);
-
   return (
     <div className="relative z-[2] mx-auto mt-11 h-[500px] max-w-[1000px]">
-      {/* Compare window */}
+      {/* Product video in an app-window frame */}
       <div className="absolute left-1/2 top-0 w-[640px] max-w-full -translate-x-1/2 overflow-hidden rounded-t-2xl border border-b-0 border-[var(--shot-border)] bg-[var(--shot-bg)] shadow-[0_40px_80px_-30px_rgba(0,0,0,0.6)]">
         <div className="flex h-11 items-center border-b border-[#232323] px-[15px]">
           <div className="flex gap-[7px]">
@@ -74,45 +48,16 @@ export function HeroComposition() {
           </div>
         </div>
 
-        <div ref={bodyRef} className="relative flex h-[372px]">
-          <div
-            className="relative flex items-center justify-center overflow-hidden bg-[#0e0e0e] p-[26px]"
-            style={{ width: `${divider}%` }}
-          >
-            <span className="absolute left-4 top-4 rounded-md border border-[#333] bg-black/80 px-[9px] py-[3px] text-[10px] font-semibold uppercase tracking-[0.05em] text-[#c4c4c8]">
-              Original
-            </span>
-            <div className="stripes h-[288px] w-[220px] shrink-0 rounded-[9px]" />
-          </div>
-          <div
-            className="checkerboard relative flex items-center justify-center overflow-hidden p-[26px]"
-            style={{ width: `${100 - divider}%` }}
-          >
-            <span className="absolute left-4 top-4 rounded-md border border-[#333] bg-black/80 px-[9px] py-[3px] text-[10px] font-semibold uppercase tracking-[0.05em] text-[#e4e4e7]">
-              Result
-            </span>
-            <div className="stripes h-[288px] w-[220px] shrink-0 rounded-[9px] shadow-[0_12px_40px_-8px_rgba(0,0,0,0.6)]" />
-          </div>
-
-          <div
-            className="absolute inset-y-0 z-10 w-0.5 -translate-x-1/2 bg-white"
-            style={{ left: `${divider}%` }}
-          >
-            <button
-              aria-label="Drag to compare"
-              onPointerDown={(e) => {
-                e.preventDefault();
-                setDragging(true);
-              }}
-              className="absolute left-1/2 top-1/2 flex size-[34px] -translate-x-1/2 -translate-y-1/2 cursor-ew-resize items-center justify-center rounded-full bg-white text-[#18181b] shadow-[0_4px_16px_rgba(0,0,0,0.4)]"
-            >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M11 8l-3 4 3 4" />
-                <path d="M13 8l3 4-3 4" />
-              </svg>
-            </button>
-          </div>
-        </div>
+        <video
+          className="block h-[372px] w-full bg-[#0e0e0e] object-cover"
+          src="/product/video.webm"
+          poster="/product/main.png"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+        />
       </div>
 
       {/* Floating stat cards */}
