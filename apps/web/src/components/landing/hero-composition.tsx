@@ -50,7 +50,7 @@ export function HeroComposition() {
 
         <video
           className="block h-[372px] w-full bg-[#0e0e0e] object-cover"
-          src="/product/video.webm"
+          src="/product/video.mp4"
           poster="/product/main.png"
           autoPlay
           muted
