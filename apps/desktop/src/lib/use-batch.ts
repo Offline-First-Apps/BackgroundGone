@@ -38,6 +38,7 @@ export function useBatch() {
           ref.current.updateBatchItem(item.id, {
             status: "done",
             outputPath: res.path,
+            outputUrl: res.url,
           });
         } catch (e) {
           if (cancelled.current) break;
