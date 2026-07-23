@@ -1,8 +1,9 @@
-import { Check, Monitor, Moon, Sun } from "lucide-react";
+import { Check, Monitor, Moon, Settings2, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { useSettings } from "@/lib/settings-store";
 import { cn } from "@/lib/utils";
 
 /* The exact hamburger mark from the mockup: three rules with knockout dots
@@ -29,6 +30,7 @@ const THEMES = [
 export function MenuButton() {
   const [open, setOpen] = useState(false);
   const { theme, setTheme } = useTheme();
+  const { setOpen: setSettingsOpen } = useSettings();
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -65,6 +67,18 @@ export function MenuButton() {
           role="menu"
           className="absolute right-0 top-[calc(100%+8px)] z-50 w-44 overflow-hidden rounded-xl border border-win-border bg-win p-1 shadow-[var(--win-shadow)]"
         >
+          <button
+            role="menuitem"
+            onClick={() => {
+              setSettingsOpen(true);
+              setOpen(false);
+            }}
+            className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13px] text-fg-1 transition-colors hover:bg-[var(--icon-hover-bg)] hover:text-fg"
+          >
+            <Settings2 className="size-4 shrink-0" strokeWidth={1.8} />
+            <span className="flex-1 text-left">Settings</span>
+          </button>
+          <div className="my-1 h-px bg-[var(--edge-header)]" />
           <div className="px-2.5 py-1.5 text-[11px] font-medium uppercase tracking-[0.06em] text-fg-3">
             Theme
           </div>

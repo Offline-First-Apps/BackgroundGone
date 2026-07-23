@@ -40,6 +40,13 @@ export async function pickImages(multiple = false): Promise<string[]> {
   return Array.isArray(selected) ? selected : [selected];
 }
 
+/** Native folder picker → absolute path (or null). */
+export async function pickFolder(): Promise<string | null> {
+  const { open } = await import("@tauri-apps/plugin-dialog");
+  const sel = await open({ directory: true, multiple: false });
+  return typeof sel === "string" ? sel : null;
+}
+
 /** Expand a drop/selection: directories → contained images. */
 export function expandPaths(paths: string[]): Promise<string[]> {
   return invoke<string[]>("expand_paths", { paths });
@@ -85,10 +92,11 @@ export async function runRemoval(
   try {
     const outPath = await invoke<string>("process_image", { inputPath });
     const info = await invoke<ImageInfo>("image_info", { path: outPath });
+    const isJpg = /\.jpe?g$/i.test(outPath);
     return {
       url: convertFileSrc(outPath),
       path: outPath,
-      format: "png",
+      format: isJpg ? "jpg" : "png",
       sizeBytes: info.size,
       width: info.width,
       height: info.height,
