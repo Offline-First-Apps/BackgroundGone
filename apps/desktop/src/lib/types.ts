@@ -12,6 +12,8 @@ export interface BatchItem {
   url?: string;
   status: BatchStatus;
   outputPath?: string;
+  /** Asset URL of the produced (background-removed) image, once done. */
+  outputUrl?: string;
   error?: string;
 }
 
