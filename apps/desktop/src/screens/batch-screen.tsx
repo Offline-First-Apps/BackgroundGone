@@ -51,7 +51,7 @@ function StatusIcon({
 
 export function BatchScreen() {
   const { batch, updateBatchItem, reset } = useApp();
-  useBatch();
+  const cancelBatch = useBatch();
 
   const total = batch.length;
   const done = batch.filter((b) => b.status === "done").length;
@@ -76,6 +76,7 @@ export function BatchScreen() {
   }
 
   function cancelAll() {
+    cancelBatch();
     if (inTauri()) void native.cancelProcessing();
     reset();
   }
