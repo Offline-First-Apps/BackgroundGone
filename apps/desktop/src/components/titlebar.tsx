@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 
 import { MenuButton } from "@/components/menu-button";
-import { TrafficLights } from "@/components/traffic-lights";
 
 function BrandMark() {
   return (
@@ -12,17 +11,13 @@ function BrandMark() {
   );
 }
 
-/** 48px window titlebar. `left` overrides the brand mark (e.g. "Start over"). */
+/** 48px app toolbar. `left` overrides the brand mark (e.g. "Start over").
+ * Window controls (minimize/maximize/close) are handled by the native OS
+ * titlebar, so this bar carries only the app's brand + menu. */
 export function Titlebar({ left }: { left?: ReactNode }) {
   return (
-    <header
-      data-tauri-drag-region
-      className="flex h-12 shrink-0 items-center justify-between border-b border-edge-header px-4"
-    >
-      <div className="flex items-center">
-        <TrafficLights />
-        <div className="ml-4">{left ?? <BrandMark />}</div>
-      </div>
+    <header className="flex h-12 shrink-0 items-center justify-between border-b border-edge-header px-4">
+      <div className="flex items-center">{left ?? <BrandMark />}</div>
       <MenuButton />
     </header>
   );

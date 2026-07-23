@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { useApp } from "@/lib/app-store";
 import * as native from "@/lib/native";
 import { useBatch } from "@/lib/use-batch";
@@ -52,6 +54,7 @@ function StatusIcon({
 export function BatchScreen() {
   const { batch, updateBatchItem, reset } = useApp();
   const cancelBatch = useBatch();
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const total = batch.length;
   const done = batch.filter((b) => b.status === "done").length;
@@ -59,14 +62,23 @@ export function BatchScreen() {
   const queued = total - done - failed;
   const processed = done + failed;
   const current = batch.find((b) => b.status === "processing");
-  const preview = current ?? batch.find((b) => b.status === "done") ?? batch[0];
+  // User-picked row wins; otherwise follow the active item, then first done.
+  const selected = selectedId
+    ? batch.find((b) => b.id === selectedId)
+    : undefined;
+  const preview =
+    selected ?? current ?? batch.find((b) => b.status === "done") ?? batch[0];
 
   async function retry(item: BatchItem) {
     if (!item.path) return;
     updateBatchItem(item.id, { status: "processing", error: undefined });
     try {
       const res = await native.runRemoval(item.path);
-      updateBatchItem(item.id, { status: "done", outputPath: res.path });
+      updateBatchItem(item.id, {
+        status: "done",
+        outputPath: res.path,
+        outputUrl: res.url,
+      });
     } catch (e) {
       updateBatchItem(item.id, {
         status: "failed",
@@ -88,17 +100,48 @@ export function BatchScreen() {
 
   return (
     <div className="flex min-h-0 flex-1">
-      {/* Preview pane */}
-      <div className="checkerboard flex flex-1 flex-col items-center justify-center gap-[18px] p-8">
-        <div className="flex aspect-[3/4] w-[280px] items-center justify-center overflow-hidden rounded-xl bg-[var(--pane)] shadow-[0_14px_44px_-10px_rgba(0,0,0,0.6)]">
-          {preview?.url ? (
-            <img
-              src={preview.url}
-              alt={preview.name}
-              className="size-full object-cover"
-            />
-          ) : null}
+      {/* Preview pane — before + after for the selected item */}
+      <div className="flex flex-1 flex-col items-center justify-center gap-[18px] bg-[var(--pane)] p-8">
+        <div className="flex items-start gap-5">
+          {/* Before */}
+          <figure className="flex flex-col items-center gap-2.5">
+            <div className="flex aspect-[3/4] w-[232px] items-center justify-center overflow-hidden rounded-xl bg-[var(--pane)] shadow-[0_14px_44px_-10px_rgba(0,0,0,0.6)]">
+              {preview?.url ? (
+                <img
+                  src={preview.url}
+                  alt={preview.name}
+                  className="size-full object-cover"
+                />
+              ) : null}
+            </div>
+            <figcaption className="font-mono text-[11px] uppercase tracking-wide text-fg-3">
+              Before
+            </figcaption>
+          </figure>
+
+          {/* After */}
+          <figure className="flex flex-col items-center gap-2.5">
+            <div className="checkerboard flex aspect-[3/4] w-[232px] items-center justify-center overflow-hidden rounded-xl shadow-[0_14px_44px_-10px_rgba(0,0,0,0.6)]">
+              {preview?.status === "done" && preview.outputUrl ? (
+                <img
+                  src={preview.outputUrl}
+                  alt={`${preview.name} — background removed`}
+                  className="size-full object-contain"
+                />
+              ) : preview?.status === "failed" ? (
+                <span className="px-4 text-center text-[12px] leading-relaxed text-[#ff5252]">
+                  {preview.error ?? "Failed"}
+                </span>
+              ) : (
+                <span className="size-7 animate-bg-spin rounded-full border-[3px] border-[var(--spin-track)] border-t-brand" />
+              )}
+            </div>
+            <figcaption className="font-mono text-[11px] uppercase tracking-wide text-fg-3">
+              After
+            </figcaption>
+          </figure>
         </div>
+
         <span className="rounded-lg border border-[var(--win-border)] bg-[var(--overlay)] px-3 py-[5px] font-mono text-xs text-fg-1 backdrop-blur-sm">
           {queued > 0 || current
             ? `Now processing · ${Math.min(processed + 1, total)} of ${total}`
@@ -139,11 +182,12 @@ export function BatchScreen() {
 
         <div className="flex flex-1 flex-col gap-0.5 overflow-y-auto p-2">
           {batch.map((item) => {
-            const active = item.status === "processing";
+            const active = preview?.id === item.id;
             return (
               <div
                 key={item.id}
-                className={`flex items-center gap-3 rounded-[9px] px-2.5 py-[9px] ${
+                onClick={() => setSelectedId(item.id)}
+                className={`flex cursor-pointer items-center gap-3 rounded-[9px] px-2.5 py-[9px] ${
                   active
                     ? "border border-[var(--win-border)] bg-[var(--edge-header)]"
                     : "border border-transparent hover:bg-[var(--edge-header)]"
