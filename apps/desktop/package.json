@@ -10,7 +10,10 @@
     "check-types": "tsc --noEmit",
     "tauri": "tauri",
     "tauri:dev": "tauri dev",
-    "tauri:build": "tauri build"
+    "tauri:build": "tauri build",
+    "tauri:build:directml": "tauri build --features directml",
+    "tauri:build:cuda": "tauri build --features cuda",
+    "tauri:build:coreml": "tauri build --features coreml"
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.2.5",

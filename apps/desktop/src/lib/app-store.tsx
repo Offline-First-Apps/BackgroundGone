@@ -6,7 +6,7 @@ import {
   type ReactNode,
 } from "react";
 
-import type { ImageMeta, ResultMeta, Screen } from "./types";
+import type { BatchItem, ImageMeta, ResultMeta, Screen } from "./types";
 
 interface AppState {
   screen: Screen;
@@ -16,6 +16,8 @@ interface AppState {
   progress: number;
   /** Index of the currently-active pipeline stage. */
   stageIndex: number;
+  /** Batch queue (screen === "batch"). */
+  batch: BatchItem[];
 }
 
 const initialState: AppState = {
@@ -24,6 +26,7 @@ const initialState: AppState = {
   result: null,
   progress: 0,
   stageIndex: 0,
+  batch: [],
 };
 
 type Action =
@@ -31,6 +34,8 @@ type Action =
   | { type: "SET_PROGRESS"; progress: number }
   | { type: "SET_STAGE"; stageIndex: number }
   | { type: "FINISH"; result: ResultMeta }
+  | { type: "START_BATCH"; items: BatchItem[] }
+  | { type: "UPDATE_BATCH_ITEM"; id: string; patch: Partial<BatchItem> }
   | { type: "RESET" };
 
 function reducer(state: AppState, action: Action): AppState {
@@ -56,6 +61,15 @@ function reducer(state: AppState, action: Action): AppState {
         progress: 100,
         stageIndex: 4,
       };
+    case "START_BATCH":
+      return { ...state, screen: "batch", batch: action.items };
+    case "UPDATE_BATCH_ITEM":
+      return {
+        ...state,
+        batch: state.batch.map((it) =>
+          it.id === action.id ? { ...it, ...action.patch } : it,
+        ),
+      };
     case "RESET":
       return { ...initialState };
     default:
@@ -68,6 +82,8 @@ interface AppStore extends AppState {
   setProgress: (progress: number) => void;
   setStage: (stageIndex: number) => void;
   finish: (result: ResultMeta) => void;
+  startBatch: (items: BatchItem[]) => void;
+  updateBatchItem: (id: string, patch: Partial<BatchItem>) => void;
   reset: () => void;
 }
 
@@ -83,6 +99,9 @@ export function AppStoreProvider({ children }: { children: ReactNode }) {
       setProgress: (progress) => dispatch({ type: "SET_PROGRESS", progress }),
       setStage: (stageIndex) => dispatch({ type: "SET_STAGE", stageIndex }),
       finish: (result) => dispatch({ type: "FINISH", result }),
+      startBatch: (items) => dispatch({ type: "START_BATCH", items }),
+      updateBatchItem: (id, patch) =>
+        dispatch({ type: "UPDATE_BATCH_ITEM", id, patch }),
       reset: () => dispatch({ type: "RESET" }),
     }),
     [state],

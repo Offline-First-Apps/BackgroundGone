@@ -8,12 +8,12 @@ import * as native from "@/lib/native";
 import { inTauri } from "@/lib/window-controls";
 
 export function EmptyScreen() {
-  const { startProcessing } = useApp();
+  const { startProcessing, startBatch } = useApp();
   const [dragging, setDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const dragDepth = useRef(0);
 
-  // Browser: intake from a File.
+  // Browser: intake from a File (single only — batch needs OS paths).
   const handleFiles = useCallback(
     async (files: FileList | null) => {
       if (!files || files.length === 0) return;
@@ -24,22 +24,28 @@ export function EmptyScreen() {
     [startProcessing],
   );
 
-  // Tauri: intake from an OS path.
-  const handlePath = useCallback(
-    async (path: string) => {
-      startProcessing(await native.intakeFromPath(path));
+  // Tauri: expand paths (folders → images) then route single vs batch.
+  const startFromPaths = useCallback(
+    async (paths: string[]) => {
+      const images = await native.expandPaths(paths);
+      if (images.length === 0) return;
+      if (images.length === 1) {
+        startProcessing(await native.intakeFromPath(images[0]));
+      } else {
+        startBatch(native.toBatchItems(images));
+      }
     },
-    [startProcessing],
+    [startProcessing, startBatch],
   );
 
   const openPicker = useCallback(async () => {
     if (inTauri()) {
-      const path = await native.pickImagePath();
-      if (path) await handlePath(path);
+      const paths = await native.pickImages(true);
+      if (paths.length) await startFromPaths(paths);
     } else {
       inputRef.current?.click();
     }
-  }, [handlePath]);
+  }, [startFromPaths]);
 
   // Ctrl/Cmd+O opens the picker, matching the on-screen hint.
   useEffect(() => {
@@ -65,13 +71,12 @@ export function EmptyScreen() {
         else if (p.type === "leave") setDragging(false);
         else if (p.type === "drop") {
           setDragging(false);
-          const path = p.paths?.[0];
-          if (path) void handlePath(path);
+          if (p.paths?.length) void startFromPaths(p.paths);
         }
       });
     })();
     return () => unlisten?.();
-  }, [handlePath]);
+  }, [startFromPaths]);
 
   return (
     <>

@@ -5,6 +5,7 @@ import { convertFileSrc, invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 
 import type {
+  BatchItem,
   EngineInfo,
   ExportFormat,
   ImageMeta,
@@ -42,6 +43,17 @@ export async function pickImages(multiple = false): Promise<string[]> {
 /** Expand a drop/selection: directories → contained images. */
 export function expandPaths(paths: string[]): Promise<string[]> {
   return invoke<string[]>("expand_paths", { paths });
+}
+
+/** Build queued BatchItems from image paths. */
+export function toBatchItems(paths: string[]): BatchItem[] {
+  return paths.map((p) => ({
+    id: crypto.randomUUID(),
+    name: basename(p),
+    path: p,
+    url: convertFileSrc(p),
+    status: "queued" as const,
+  }));
 }
 
 /** Build ImageMeta for a path — dimensions/size from Rust, preview via asset. */

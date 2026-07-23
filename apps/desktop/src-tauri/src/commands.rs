@@ -224,6 +224,21 @@ pub fn export_result(src_path: String, dest_path: String) -> Result<(), String> 
     }
 }
 
+/// Reveal a folder in the OS file manager.
+#[tauri::command]
+pub fn open_folder(path: String) -> Result<(), String> {
+    #[cfg(target_os = "windows")]
+    let mut cmd = std::process::Command::new("explorer");
+    #[cfg(target_os = "macos")]
+    let mut cmd = std::process::Command::new("open");
+    #[cfg(all(unix, not(target_os = "macos")))]
+    let mut cmd = std::process::Command::new("xdg-open");
+
+    cmd.arg(path);
+    cmd.spawn().map_err(|e| e.to_string())?;
+    Ok(())
+}
+
 /// Copy the result image to the system clipboard.
 #[tauri::command]
 pub fn copy_result(app: AppHandle, src_path: String) -> Result<(), String> {
